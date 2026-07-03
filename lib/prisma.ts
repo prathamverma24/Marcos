@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
+import { getDatabaseUrl } from './database-url'
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient
@@ -8,11 +9,11 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 export function isDatabaseConfigured() {
-  return Boolean(process.env.DATABASE_URL)
+  return Boolean(getDatabaseUrl())
 }
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL
+  const connectionString = getDatabaseUrl()
 
   if (!connectionString) {
     return null

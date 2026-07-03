@@ -57,6 +57,12 @@ NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=
 
 DATABASE_URL=
+SUPABASE_DATABASE_URL=
+SUPABASE_PROJECT_REF=
+SUPABASE_DB_PASSWORD=
+
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 
 ADMIN_EMAIL=
 ADMIN_PASSWORD_HASH=
@@ -75,7 +81,7 @@ CLOUDINARY_API_SECRET=
 
 The admin Blog CMS uses NextAuth credentials login, Prisma 7, PostgreSQL, protected App Router pages, Zod validation, and Tiptap rich text JSON. Public visitors can only read published blogs.
 
-1. Create a PostgreSQL database and set `DATABASE_URL`.
+1. Create a PostgreSQL database and set `DATABASE_URL`. For Supabase, use either the full database URL or set `SUPABASE_PROJECT_REF` and `SUPABASE_DB_PASSWORD`.
 2. Generate an auth secret:
 
 ```bash
@@ -93,7 +99,7 @@ npm run admin:hash-password -- "your-secure-password"
 
 ```bash
 npx prisma generate
-npx prisma migrate dev --name init
+npx prisma db push
 ```
 
 6. Start the site and open `http://localhost:3000/admin/login`.
@@ -123,6 +129,32 @@ Admin password: MarcosAdmin@2026
 ```
 
 Use a different password and hash before production deployment.
+
+### Supabase Setup
+
+For the Supabase project you provided:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://qhlbctedcftiolrnlspz.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
+SUPABASE_PROJECT_REF=qhlbctedcftiolrnlspz
+SUPABASE_DB_PASSWORD=your-real-supabase-database-password
+```
+
+The app can also use a complete `DATABASE_URL`:
+
+```env
+DATABASE_URL=postgresql://postgres:URL_ENCODED_PASSWORD@db.qhlbctedcftiolrnlspz.supabase.co:5432/postgres
+```
+
+Do not leave `[YOUR-PASSWORD]` in the connection string. If the password contains characters such as `@`, `#`, `/`, `?`, or `:`, URL-encode the password before putting it inside `DATABASE_URL`. The safer Vercel setup is to set `SUPABASE_PROJECT_REF` and `SUPABASE_DB_PASSWORD`; the app will build the database URL at runtime.
+
+After setting the database env locally or in a shell, apply the schema once:
+
+```bash
+npx prisma db push
+npm run cms:seed
+```
 
 Admin routes:
 
@@ -229,6 +261,42 @@ For product cards with booking buttons, add or edit objects in `data/products.ts
 2. Import the repository in Vercel.
 3. Add environment variables in Vercel Project Settings.
 4. Deploy using the default Next.js settings.
+
+Use these required production variables:
+
+```env
+NEXT_PUBLIC_SITE_URL=https://your-vercel-domain.vercel.app
+NEXTAUTH_URL=https://your-vercel-domain.vercel.app
+NEXTAUTH_SECRET=generated-base64-secret
+
+SUPABASE_PROJECT_REF=qhlbctedcftiolrnlspz
+SUPABASE_DB_PASSWORD=your-real-supabase-database-password
+
+ADMIN_EMAIL=your-admin-email
+ADMIN_PASSWORD_HASH=your-bcrypt-admin-password-hash
+```
+
+Optional variables:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://qhlbctedcftiolrnlspz.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
+CONTACT_EMAIL_TO=
+CONTACT_EMAIL_FROM=
+RESEND_API_KEY=
+WEB3FORMS_ACCESS_KEY=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
+
+The Vercel build command should stay as:
+
+```bash
+npm run build
+```
+
+That script runs `prisma generate && next build`. Do not set Vercel's output directory manually for this Next.js app.
 
 ## Testing Checklist
 

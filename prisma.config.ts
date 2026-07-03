@@ -1,6 +1,7 @@
 import { defineConfig } from 'prisma/config'
 import fs from 'node:fs'
 import path from 'node:path'
+import { getDatabaseUrl } from './lib/database-url'
 
 function loadEnvFile(fileName: string) {
   const filePath = path.join(process.cwd(), fileName)
@@ -37,6 +38,6 @@ export default defineConfig({
     path: 'prisma/migrations',
   },
   datasource: {
-    url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/marcos_water?schema=public',
+    url: getDatabaseUrl() || 'postgresql://postgres:postgres@localhost:5432/marcos_water?schema=public',
   },
 })

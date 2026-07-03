@@ -56,11 +56,38 @@ function richTextFromBlocks(blocks) {
   }
 }
 
+function clean(value) {
+  return value?.trim() || ''
+}
+
+function hasPasswordPlaceholder(value) {
+  return value.includes('[YOUR-PASSWORD]') || value.includes('<YOUR-PASSWORD>')
+}
+
+function getDatabaseUrl() {
+  const explicitUrl = clean(process.env.DATABASE_URL) || clean(process.env.SUPABASE_DATABASE_URL)
+
+  if (explicitUrl && !hasPasswordPlaceholder(explicitUrl)) {
+    return explicitUrl
+  }
+
+  const projectRef = clean(process.env.SUPABASE_PROJECT_REF)
+  const password = clean(process.env.SUPABASE_DB_PASSWORD)
+
+  if (!projectRef || !password || hasPasswordPlaceholder(password)) {
+    return ''
+  }
+
+  return `postgresql://postgres:${encodeURIComponent(password)}@db.${projectRef}.supabase.co:5432/postgres`
+}
+
 loadEnvFile('.env.local')
 loadEnvFile('.env')
 
-if (!process.env.DATABASE_URL) {
-  console.error('DATABASE_URL is required to seed CMS data.')
+const databaseUrl = getDatabaseUrl()
+
+if (!databaseUrl) {
+  console.error('DATABASE_URL or SUPABASE_PROJECT_REF + SUPABASE_DB_PASSWORD is required to seed CMS data.')
   process.exit(1)
 }
 
@@ -173,7 +200,7 @@ const starterBlogs = [
   },
 ]
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+const pool = new Pool({ connectionString: databaseUrl })
 const prisma = new PrismaClient({ adapter: new PrismaPg(pool) })
 
 for (const name of categories) {

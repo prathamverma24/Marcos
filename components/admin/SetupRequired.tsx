@@ -5,10 +5,14 @@ export default function SetupRequired({ message }: { message?: string }) {
       <h2 className="mt-2 text-2xl font-semibold text-amber-950">Connect PostgreSQL to enable the Blog CMS</h2>
       <p className="mt-3 max-w-3xl text-sm leading-6">
         {message ||
-          'Add DATABASE_URL to .env.local, run npx prisma migrate dev, then reload the admin dashboard.'}
+          'Add DATABASE_URL, or SUPABASE_PROJECT_REF plus SUPABASE_DB_PASSWORD, then run Prisma setup and reload the admin dashboard.'}
       </p>
       <pre className="mt-5 overflow-x-auto rounded-lg bg-white p-4 text-sm text-slate-800">
-        <code>{'DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public\nnpx prisma generate\nnpx prisma migrate dev'}</code>
+        <code>
+          {
+            'DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public\n# or\nSUPABASE_PROJECT_REF=your-project-ref\nSUPABASE_DB_PASSWORD=your-database-password\n\nnpx prisma generate\nnpx prisma db push'
+          }
+        </code>
       </pre>
     </div>
   )
