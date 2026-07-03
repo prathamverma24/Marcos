@@ -3,6 +3,7 @@ import type { NextAuthOptions, Session } from 'next-auth'
 import { getServerSession } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { redirect } from 'next/navigation'
+import { prisma } from './prisma'
 
 export const authSecret = process.env.NEXTAUTH_SECRET || 'local-placeholder-secret-login-disabled'
 
@@ -27,23 +28,46 @@ export const authOptions: NextAuthOptions = {
         const email = credentials?.email?.trim().toLowerCase()
         const password = credentials?.password || ''
 
-        if (!process.env.NEXTAUTH_SECRET || !adminEmail || !adminPasswordHash || !email || !password) {
+        if (!process.env.NEXTAUTH_SECRET || !email || !password) {
           return null
         }
 
-        const validEmail = email === adminEmail
-        const validPassword = await compare(password, adminPasswordHash)
-
-        if (!validEmail || !validPassword) {
-          return null
+        if (adminEmail && adminPasswordHash && email === adminEmail && (await compare(password, adminPasswordHash))) {
+          return {
+            id: adminEmail,
+            email: adminEmail,
+            name: 'Marcos Admin',
+            role: 'ADMIN',
+          }
         }
 
-        return {
-          id: adminEmail,
-          email: adminEmail,
-          name: 'Marcos Admin',
-          role: 'ADMIN',
+        if (prisma) {
+          try {
+            const user = await prisma.user.findUnique({
+              where: { email },
+              select: {
+                id: true,
+                email: true,
+                name: true,
+                password: true,
+                role: true,
+              },
+            })
+
+            if (user?.role === 'ADMIN' && user.password && (await compare(password, user.password))) {
+              return {
+                id: user.id,
+                email: user.email,
+                name: user.name || 'Marcos Admin',
+                role: 'ADMIN',
+              }
+            }
+          } catch (error) {
+            console.error('Admin database credential lookup failed', error)
+          }
         }
+
+        return null
       },
     }),
   ],
