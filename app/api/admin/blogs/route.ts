@@ -5,6 +5,7 @@ import { blogMutationSchema } from '../../../../lib/blog-validations'
 import { apiError, getOrCreateAdminUser, requireAdminApi } from '../../../../lib/cms-api'
 import { getAdminBlogs } from '../../../../lib/admin-blog-data'
 import { requireDatabase } from '../../../../lib/prisma'
+import { revalidatePublicBlogPaths } from '../../../../lib/public-blog-cache'
 
 export async function GET(request: Request) {
   const auth = await requireAdminApi()
@@ -77,8 +78,12 @@ export async function POST(request: Request) {
         readTime: parsed.data.readTime || estimateReadTime(parsed.data.content),
         status: parsed.data.status,
         publishedAt,
+        showOnHomepage: parsed.data.showOnHomepage,
+        homepageOrder: parsed.data.showOnHomepage ? parsed.data.homepageOrder : null,
       },
     })
+
+    revalidatePublicBlogPaths(blog.slug)
 
     return NextResponse.json({ success: true, blog }, { status: 201 })
   } catch (error) {

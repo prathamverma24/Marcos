@@ -46,6 +46,8 @@ export default async function EditBlogPage({ params }: EditBlogPageProps) {
             readTime: blog.readTime,
             status: blog.status,
             publishedAt: blog.publishedAt?.toISOString() || null,
+            showOnHomepage: blog.showOnHomepage,
+            homepageOrder: blog.homepageOrder,
           }}
         />
       </AdminShell>

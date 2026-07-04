@@ -93,6 +93,23 @@ function staticPublishedBlogs() {
     .map(mapStaticBlog)
 }
 
+function byHomepagePreference(
+  a: Prisma.BlogGetPayload<{ include: typeof publicInclude }>,
+  b: Prisma.BlogGetPayload<{ include: typeof publicInclude }>,
+) {
+  const aOrder = a.homepageOrder ?? Number.POSITIVE_INFINITY
+  const bOrder = b.homepageOrder ?? Number.POSITIVE_INFINITY
+
+  if (aOrder !== bOrder) {
+    return aOrder - bOrder
+  }
+
+  const aDate = (a.publishedAt || a.createdAt).getTime()
+  const bDate = (b.publishedAt || b.createdAt).getTime()
+
+  return bDate - aDate
+}
+
 export async function getPublishedBlogs() {
   if (!prisma) {
     return staticPublishedBlogs()
@@ -109,6 +126,29 @@ export async function getPublishedBlogs() {
   } catch (error) {
     console.error('Falling back to static blogs because Prisma published blog lookup failed', error)
     return staticPublishedBlogs()
+  }
+}
+
+export async function getHomepageBlogs(limit = 6) {
+  if (!prisma) {
+    return staticPublishedBlogs().slice(0, limit)
+  }
+
+  try {
+    const blogs = await prisma.blog.findMany({
+      where: {
+        ...publishedWhere(),
+        showOnHomepage: true,
+      },
+      include: publicInclude,
+      orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
+      take: 24,
+    })
+
+    return blogs.sort(byHomepagePreference).slice(0, limit).map(mapPrismaBlog)
+  } catch (error) {
+    console.error('Falling back to static blogs because Prisma homepage blog lookup failed', error)
+    return staticPublishedBlogs().slice(0, limit)
   }
 }
 

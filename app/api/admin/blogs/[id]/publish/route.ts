@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { blogStatusSchema } from '../../../../../../lib/blog-validations'
 import { apiError, requireAdminApi } from '../../../../../../lib/cms-api'
 import { requireDatabase } from '../../../../../../lib/prisma'
+import { revalidatePublicBlogPaths } from '../../../../../../lib/public-blog-cache'
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   const auth = await requireAdminApi()
@@ -23,6 +24,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
         publishedAt: status === BlogStatus.PUBLISHED ? new Date() : null,
       },
     })
+
+    revalidatePublicBlogPaths(blog.slug)
 
     return NextResponse.json({ success: true, blog })
   } catch (error) {

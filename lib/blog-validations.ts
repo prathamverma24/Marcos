@@ -17,6 +17,21 @@ const optionalText = z
   .optional()
   .transform((value) => value || undefined)
 
+const optionalHomepageOrder = z.preprocess(
+  (value) => {
+    if (value === '' || value === null || value === undefined) {
+      return undefined
+    }
+
+    if (typeof value === 'string') {
+      return Number(value)
+    }
+
+    return value
+  },
+  z.number().int().min(1, 'Use a value from 1 to 6').max(6, 'Use a value from 1 to 6').optional(),
+)
+
 function hasRichTextContent(value: unknown) {
   if (!value || typeof value !== 'object') {
     return false
@@ -66,6 +81,8 @@ export const blogMutationSchema = z.object({
   readTime: optionalText,
   status: blogStatusSchema.default('DRAFT'),
   publishedAt: optionalText,
+  showOnHomepage: z.boolean().default(true),
+  homepageOrder: optionalHomepageOrder,
 })
 
 export type BlogMutationInput = z.infer<typeof blogMutationSchema>

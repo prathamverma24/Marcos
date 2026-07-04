@@ -48,10 +48,13 @@ model Blog {
   readTime        String?
   status          BlogStatus @default(DRAFT)
   publishedAt     DateTime?
+  showOnHomepage  Boolean    @default(true)
+  homepageOrder   Int?
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 
   @@index([status, publishedAt])
+  @@index([showOnHomepage, status, publishedAt])
   @@index([categoryId])
 }
 

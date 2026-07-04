@@ -64,6 +64,19 @@ function hasPasswordPlaceholder(value) {
   return value.includes('[YOUR-PASSWORD]') || value.includes('<YOUR-PASSWORD>')
 }
 
+function buildSupabasePoolerUrl(projectRef, password) {
+  const poolerHost = clean(process.env.SUPABASE_POOLER_HOST)
+
+  if (!poolerHost) {
+    return ''
+  }
+
+  const poolerPort = clean(process.env.SUPABASE_POOLER_PORT) || '6543'
+  const poolerUser = clean(process.env.SUPABASE_POOLER_USER) || `postgres.${projectRef}`
+
+  return `postgresql://${encodeURIComponent(poolerUser)}:${encodeURIComponent(password)}@${poolerHost}:${poolerPort}/postgres`
+}
+
 function getDatabaseUrl() {
   const explicitUrl = clean(process.env.DATABASE_URL) || clean(process.env.SUPABASE_DATABASE_URL)
 
@@ -78,6 +91,12 @@ function getDatabaseUrl() {
     return ''
   }
 
+  const poolerUrl = buildSupabasePoolerUrl(projectRef, password)
+
+  if (poolerUrl) {
+    return poolerUrl
+  }
+
   return `postgresql://postgres:${encodeURIComponent(password)}@db.${projectRef}.supabase.co:5432/postgres`
 }
 
@@ -87,7 +106,7 @@ loadEnvFile('.env')
 const databaseUrl = getDatabaseUrl()
 
 if (!databaseUrl) {
-  console.error('DATABASE_URL or SUPABASE_PROJECT_REF + SUPABASE_DB_PASSWORD is required to seed CMS data.')
+  console.error('DATABASE_URL, SUPABASE_DATABASE_URL, or Supabase project/pooler env vars are required to seed CMS data.')
   process.exit(1)
 }
 
@@ -117,6 +136,8 @@ const starterBlogs = [
     keywords: ['industrial RO plant', 'commercial RO system', 'water treatment solution', 'RO plant for business'],
     authorName: 'Marcos Water Solutions',
     publishedAt: new Date('2026-01-01T00:00:00.000Z'),
+    showOnHomepage: true,
+    homepageOrder: 3,
     readTime: '4 min read',
     featuredImage: '/images/blog-industrial-ro.jpg',
     imageAlt: 'Industrial RO plant system by Marcos Water Solutions',
@@ -149,6 +170,8 @@ const starterBlogs = [
     keywords: ['STP plant', 'ETP plant', 'wastewater treatment', 'commercial sewage treatment'],
     authorName: 'Marcos Water Solutions',
     publishedAt: new Date('2026-01-02T00:00:00.000Z'),
+    showOnHomepage: true,
+    homepageOrder: 2,
     readTime: '5 min read',
     featuredImage: '/images/blog-stp-etp.jpg',
     imageAlt: 'STP and ETP plant system by Marcos Water Solutions',
@@ -179,6 +202,8 @@ const starterBlogs = [
     keywords: ['water softener', 'hard water treatment', 'commercial water softener', 'home water softener'],
     authorName: 'Marcos Water Solutions',
     publishedAt: new Date('2026-01-03T00:00:00.000Z'),
+    showOnHomepage: true,
+    homepageOrder: 1,
     readTime: '3 min read',
     featuredImage: '/images/blog-water-softener.jpg',
     imageAlt: 'Water softener plant by Marcos Water Solutions',

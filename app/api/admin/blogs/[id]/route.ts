@@ -4,6 +4,7 @@ import { estimateReadTime } from '../../../../../lib/blog-content'
 import { blogMutationSchema } from '../../../../../lib/blog-validations'
 import { apiError, requireAdminApi } from '../../../../../lib/cms-api'
 import { requireDatabase } from '../../../../../lib/prisma'
+import { revalidatePublicBlogPaths } from '../../../../../lib/public-blog-cache'
 
 export async function GET(_request: Request, { params }: { params: { id: string } }) {
   const auth = await requireAdminApi()
@@ -84,8 +85,12 @@ export async function PATCH(request: Request, { params }: { params: { id: string
         readTime: parsed.data.readTime || estimateReadTime(parsed.data.content),
         status: parsed.data.status,
         publishedAt,
+        showOnHomepage: parsed.data.showOnHomepage,
+        homepageOrder: parsed.data.showOnHomepage ? parsed.data.homepageOrder : null,
       },
     })
+
+    revalidatePublicBlogPaths(current.slug, blog.slug)
 
     return NextResponse.json({ success: true, blog })
   } catch (error) {
@@ -102,7 +107,10 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
 
   try {
     const db = requireDatabase()
-    await db.blog.delete({ where: { id: params.id } })
+    const blog = await db.blog.delete({ where: { id: params.id } })
+
+    revalidatePublicBlogPaths(blog.slug)
+
     return NextResponse.json({ success: true })
   } catch (error) {
     return apiError(error, 'Unable to delete blog')

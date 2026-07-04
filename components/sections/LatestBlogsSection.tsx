@@ -1,11 +1,11 @@
-import { getPublishedBlogs } from '../../lib/blog-data'
-import BlogCard from '../ui/BlogCard'
+import { getHomepageBlogs } from '../../lib/blog-data'
 import ButtonLink from '../ui/ButtonLink'
 import Reveal from '../ui/Reveal'
 import SectionHeading from '../ui/SectionHeading'
+import HomeBlogSlider from './HomeBlogSlider'
 
 export default async function LatestBlogsSection() {
-  const latestBlogs = (await getPublishedBlogs()).slice(0, 3)
+  const latestBlogs = await getHomepageBlogs(6)
 
   return (
     <section id="blog-preview" className="bg-white px-5 py-20 lg:px-8">
@@ -24,11 +24,7 @@ export default async function LatestBlogsSection() {
             </ButtonLink>
           </Reveal>
         </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {latestBlogs.map((blog, index) => (
-            <BlogCard key={blog.slug} blog={blog} index={index} />
-          ))}
-        </div>
+        <HomeBlogSlider blogs={latestBlogs} />
       </div>
     </section>
   )

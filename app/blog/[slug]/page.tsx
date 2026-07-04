@@ -8,18 +8,15 @@ import Header from '../../../components/layout/Header'
 import BlogCard from '../../../components/ui/BlogCard'
 import ButtonLink from '../../../components/ui/ButtonLink'
 import RichTextRenderer from '../../../components/ui/RichTextRenderer'
-import { getPublishedBlogBySlug, getPublishedBlogSlugs, getRelatedPublishedBlogs } from '../../../lib/blog-data'
+import { getPublishedBlogBySlug, getRelatedPublishedBlogs } from '../../../lib/blog-data'
 import { siteData } from '../../../data/site'
+
+export const dynamic = 'force-dynamic'
 
 type BlogDetailPageProps = {
   params: {
     slug: string
   }
-}
-
-export async function generateStaticParams() {
-  const slugs = await getPublishedBlogSlugs()
-  return slugs.map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: BlogDetailPageProps): Promise<Metadata> {

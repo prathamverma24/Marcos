@@ -7,6 +7,8 @@ import SectionHeading from '../../components/ui/SectionHeading'
 import { getPublishedBlogCategories, getPublishedBlogs } from '../../lib/blog-data'
 import { siteData } from '../../data/site'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Water Treatment Blogs & Guides',
   description:

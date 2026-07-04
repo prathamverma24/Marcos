@@ -33,6 +33,8 @@ export type BlogFormInitialValue = {
   readTime?: string | null
   status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED'
   publishedAt?: string | null
+  showOnHomepage?: boolean
+  homepageOrder?: number | null
 }
 
 const formSchema = z.object({
@@ -52,6 +54,12 @@ const formSchema = z.object({
   keywords: z.string().trim().optional(),
   readTime: z.string().trim().optional(),
   publishedAt: z.string().trim().optional(),
+  showOnHomepage: z.boolean().optional(),
+  homepageOrder: z
+    .string()
+    .trim()
+    .optional()
+    .refine((value) => !value || (/^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= 6), 'Use a value from 1 to 6'),
 })
 
 type BlogFormData = z.infer<typeof formSchema>
@@ -116,11 +124,14 @@ export default function BlogForm({
       keywords: keywordString(initialValue?.keywords),
       readTime: initialValue?.readTime || '',
       publishedAt: toDatetimeLocal(initialValue?.publishedAt),
+      showOnHomepage: initialValue?.showOnHomepage ?? true,
+      homepageOrder: initialValue?.homepageOrder ? String(initialValue.homepageOrder) : '',
     },
   })
 
   const title = watch('title')
   const featuredImage = watch('featuredImage')
+  const showOnHomepage = watch('showOnHomepage')
   const previewBlog = {
     title: title || 'Blog preview',
     excerpt: watch('excerpt') || 'Preview excerpt will appear here.',
@@ -175,6 +186,8 @@ export default function BlogForm({
         ...values,
         content,
         status: targetStatus,
+        showOnHomepage: Boolean(values.showOnHomepage),
+        homepageOrder: values.showOnHomepage ? values.homepageOrder : '',
         keywords: values.keywords
           ? values.keywords
               .split(',')
@@ -323,6 +336,27 @@ export default function BlogForm({
           <Field label="Publish date" error={errors.publishedAt?.message}>
             <input {...register('publishedAt')} type="datetime-local" className="form-field" />
           </Field>
+          <div className="grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 md:grid-cols-[1fr_180px] md:items-end">
+            <label className="flex min-h-12 items-center gap-3 rounded-md border border-slate-200 bg-white px-4 py-3">
+              <input
+                {...register('showOnHomepage')}
+                type="checkbox"
+                className="h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500"
+              />
+              <span className="text-sm font-semibold text-slate-800">Show on homepage</span>
+            </label>
+            <Field label="Home order" error={errors.homepageOrder?.message}>
+              <input
+                {...register('homepageOrder')}
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={6}
+                disabled={!showOnHomepage}
+                className="form-field bg-white disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
+              />
+            </Field>
+          </div>
         </div>
 
         {serverMessage ? (

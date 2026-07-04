@@ -60,6 +60,9 @@ DATABASE_URL=
 SUPABASE_DATABASE_URL=
 SUPABASE_PROJECT_REF=
 SUPABASE_DB_PASSWORD=
+SUPABASE_POOLER_HOST=
+SUPABASE_POOLER_PORT=6543
+SUPABASE_POOLER_USER=
 
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
@@ -81,7 +84,7 @@ CLOUDINARY_API_SECRET=
 
 The admin Blog CMS uses NextAuth credentials login, Prisma 7, PostgreSQL, protected App Router pages, Zod validation, and Tiptap rich text JSON. Public visitors can only read published blogs.
 
-1. Create a PostgreSQL database and set `DATABASE_URL`. For Supabase, use either the full database URL or set `SUPABASE_PROJECT_REF` and `SUPABASE_DB_PASSWORD`.
+1. Create a PostgreSQL database and set `DATABASE_URL`. For Supabase on Vercel, use the Supabase pooler connection string in `SUPABASE_DATABASE_URL`.
 2. Generate an auth secret:
 
 ```bash
@@ -139,15 +142,18 @@ NEXT_PUBLIC_SUPABASE_URL=https://qhlbctedcftiolrnlspz.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
 SUPABASE_PROJECT_REF=qhlbctedcftiolrnlspz
 SUPABASE_DB_PASSWORD=your-real-supabase-database-password
+SUPABASE_POOLER_HOST=aws-0-ap-south-1.pooler.supabase.com
+SUPABASE_POOLER_PORT=6543
+SUPABASE_POOLER_USER=postgres.qhlbctedcftiolrnlspz
 ```
 
-The app can also use a complete `DATABASE_URL`:
+For Vercel/serverless deployments, prefer the Supabase pooler URL:
 
 ```env
-DATABASE_URL=postgresql://postgres:URL_ENCODED_PASSWORD@db.qhlbctedcftiolrnlspz.supabase.co:5432/postgres
+SUPABASE_DATABASE_URL=postgresql://postgres.qhlbctedcftiolrnlspz:URL_ENCODED_PASSWORD@aws-0-ap-south-1.pooler.supabase.com:6543/postgres
 ```
 
-Do not leave `[YOUR-PASSWORD]` in the connection string. If the password contains characters such as `@`, `#`, `/`, `?`, or `:`, URL-encode the password before putting it inside `DATABASE_URL`. The safer Vercel setup is to set `SUPABASE_PROJECT_REF` and `SUPABASE_DB_PASSWORD`; the app will build the database URL at runtime.
+Do not leave `[YOUR-PASSWORD]` in the connection string. If the password contains characters such as `@`, `#`, `/`, `?`, or `:`, URL-encode the password before putting it inside the URL. Avoid using `db.qhlbctedcftiolrnlspz.supabase.co` on Vercel because that direct database host may resolve to IPv6 only; use Supabase's pooler host instead.
 
 After setting the database env locally or in a shell, apply the schema once:
 
@@ -271,10 +277,21 @@ NEXTAUTH_SECRET=generated-base64-secret
 
 SUPABASE_PROJECT_REF=qhlbctedcftiolrnlspz
 SUPABASE_DB_PASSWORD=your-real-supabase-database-password
+SUPABASE_POOLER_HOST=aws-0-ap-south-1.pooler.supabase.com
+SUPABASE_POOLER_PORT=6543
+SUPABASE_POOLER_USER=postgres.qhlbctedcftiolrnlspz
 
 ADMIN_EMAIL=your-admin-email
 ADMIN_PASSWORD_HASH=your-bcrypt-admin-password-hash
 ```
+
+You can also set a single pooled connection string instead of the four Supabase fields above:
+
+```env
+SUPABASE_DATABASE_URL=postgresql://postgres.qhlbctedcftiolrnlspz:URL_ENCODED_PASSWORD@aws-0-ap-south-1.pooler.supabase.com:6543/postgres
+```
+
+The direct Supabase host `db.qhlbctedcftiolrnlspz.supabase.co` should not be used for Vercel if it resolves only to IPv6. If production admin shows "Database setup required" or `/api/admin/blogs` says it cannot reach `db.qhlbctedcftiolrnlspz.supabase.co`, replace the Vercel database env var with the pooled URL above and redeploy.
 
 Optional variables:
 

@@ -77,12 +77,13 @@ export default async function AdminBlogsPage({ searchParams }: AdminBlogsPagePro
 
         <section className="mt-6 overflow-hidden rounded-lg border border-cyan-900/10 bg-white shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[980px] text-left text-sm">
+            <table className="w-full min-w-[1080px] text-left text-sm">
               <thead className="bg-slate-50">
                 <tr className="border-b border-slate-200 text-xs uppercase tracking-[0.14em] text-slate-500">
                   <th className="px-4 py-3">Title</th>
                   <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Home</th>
                   <th className="px-4 py-3">Created</th>
                   <th className="px-4 py-3">Published</th>
                   <th className="px-4 py-3">Actions</th>
@@ -98,6 +99,9 @@ export default async function AdminBlogsPage({ searchParams }: AdminBlogsPagePro
                     <td className="px-4 py-4 text-slate-700">{blog.category?.name || 'Uncategorized'}</td>
                     <td className="px-4 py-4">
                       <StatusBadge status={blog.status} />
+                    </td>
+                    <td className="px-4 py-4">
+                      <HomeBadge showOnHomepage={blog.showOnHomepage} homepageOrder={blog.homepageOrder} />
                     </td>
                     <td className="px-4 py-4 text-slate-600">{blog.createdAt.toLocaleDateString('en-IN')}</td>
                     <td className="px-4 py-4 text-slate-600">
@@ -127,6 +131,18 @@ export default async function AdminBlogsPage({ searchParams }: AdminBlogsPagePro
       </AdminShell>
     )
   }
+}
+
+function HomeBadge({ showOnHomepage, homepageOrder }: { showOnHomepage: boolean; homepageOrder: number | null }) {
+  if (!showOnHomepage) {
+    return <span className="inline-flex rounded-md border border-slate-200 bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">Hidden</span>
+  }
+
+  return (
+    <span className="inline-flex rounded-md border border-cyan-200 bg-cyan-50 px-2.5 py-1 text-xs font-semibold text-cyan-800">
+      {homepageOrder ? `Shown #${homepageOrder}` : 'Shown'}
+    </span>
+  )
 }
 
 function StatusBadge({ status }: { status: string }) {

@@ -17,6 +17,8 @@ import WhyChooseSection from '../components/sections/WhyChooseSection'
 import { products } from '../data/services'
 import { siteData } from '../data/site'
 
+export const dynamic = 'force-dynamic'
+
 export default function HomePage() {
   const structuredData = {
     '@context': 'https://schema.org',
