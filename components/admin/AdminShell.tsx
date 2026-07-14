@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { BookOpen, FilePlus2, LayoutDashboard, MessageSquareQuote } from 'lucide-react'
+import { BookOpen, FilePlus2, Inbox, LayoutDashboard, MessageSquareQuote } from 'lucide-react'
 import { siteData } from '../../data/site'
 import LogoutButton from './LogoutButton'
 
@@ -14,6 +14,7 @@ type AdminShellProps = {
 
 const adminNavigation = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/leads', label: 'Leads', icon: Inbox },
   { href: '/admin/blogs', label: 'Blogs', icon: BookOpen },
   { href: '/admin/reviews', label: 'Reviews', icon: MessageSquareQuote },
   { href: '/admin/blogs/new', label: 'New Blog', icon: FilePlus2 },

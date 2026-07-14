@@ -1,4 +1,4 @@
-import { BlogStatus, type Prisma } from '@prisma/client'
+import { BlogStatus, LeadStatus, type Prisma } from '@prisma/client'
 import { ensureDefaultCategories } from './default-categories'
 import { requireDatabase } from './prisma'
 
@@ -15,23 +15,33 @@ const adminBlogInclude = {
 
 export async function getAdminDashboardData() {
   const db = requireDatabase()
-  const [totalBlogs, publishedBlogs, draftBlogs, categories, recentBlogs] = await Promise.all([
-    db.blog.count(),
-    db.blog.count({ where: { status: BlogStatus.PUBLISHED } }),
-    db.blog.count({ where: { status: BlogStatus.DRAFT } }),
-    db.category.count(),
-    db.blog.findMany({
-      include: adminBlogInclude,
-      orderBy: { updatedAt: 'desc' },
-      take: 5,
-    }),
-  ])
+  const [totalBlogs, publishedBlogs, draftBlogs, categories, totalLeads, newLeads, recentLeads, recentBlogs] =
+    await Promise.all([
+      db.blog.count(),
+      db.blog.count({ where: { status: BlogStatus.PUBLISHED } }),
+      db.blog.count({ where: { status: BlogStatus.DRAFT } }),
+      db.category.count(),
+      db.lead.count(),
+      db.lead.count({ where: { status: LeadStatus.NEW } }),
+      db.lead.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+      }),
+      db.blog.findMany({
+        include: adminBlogInclude,
+        orderBy: { updatedAt: 'desc' },
+        take: 5,
+      }),
+    ])
 
   return {
     totalBlogs,
     publishedBlogs,
     draftBlogs,
     categories,
+    totalLeads,
+    newLeads,
+    recentLeads,
     recentBlogs,
   }
 }

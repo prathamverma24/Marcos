@@ -17,6 +17,20 @@ enum BlogStatus {
   ARCHIVED
 }
 
+enum LeadSource {
+  CONTACT
+  BOOKING
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  WON
+  LOST
+  ARCHIVED
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String?
@@ -86,4 +100,28 @@ model Review {
   updatedAt DateTime @updatedAt
 
   @@index([createdAt])
+}
+
+model Lead {
+  id              String     @id @default(cuid())
+  source          LeadSource
+  status          LeadStatus @default(NEW)
+  name            String
+  phone           String
+  email           String
+  company         String?
+  interest        String?
+  productId       String?
+  productName     String?
+  requirementType String?
+  preferredDate   String?
+  preferredTime   String?
+  location        String?
+  message         String
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([source, createdAt])
+  @@index([status, createdAt])
+  @@index([email])
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sendContactEmail } from '../../../lib/email'
+import { createContactLead } from '../../../lib/lead-data'
 import { contactSchema } from '../../../lib/validations'
 
 export async function POST(request: Request) {
@@ -25,8 +26,9 @@ export async function POST(request: Request) {
   }
 
   try {
+    const lead = await createContactLead(parsed.data)
     const result = await sendContactEmail(parsed.data)
-    return NextResponse.json({ success: true, ...result })
+    return NextResponse.json({ success: true, leadId: lead?.id, ...result })
   } catch (error) {
     return NextResponse.json(
       {

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BookOpen, Database, FilePlus2, MessageSquareQuote } from 'lucide-react'
+import { BookOpen, Database, FilePlus2, MessageSquareQuote, UsersRound } from 'lucide-react'
 import AdminShell from '../../components/admin/AdminShell'
 import { getAdminDashboardData } from '../../lib/admin-blog-data'
 import { requireAdmin } from '../../lib/auth'
@@ -15,7 +15,7 @@ export default async function AdminDashboardPage() {
     return (
       <AdminShell
         title="Dashboard"
-        description="Manage SEO blogs, drafts, categories, and publishing status."
+        description="Manage leads, SEO blogs, drafts, categories, and publishing status."
         actions={
           <Link
             href="/admin/blogs/new"
@@ -26,12 +26,69 @@ export default async function AdminDashboardPage() {
           </Link>
         }
       >
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-6">
+          <StatCard label="Total Leads" value={data.totalLeads} />
+          <StatCard label="New Leads" value={data.newLeads} />
           <StatCard label="Total Blogs" value={data.totalBlogs} />
           <StatCard label="Published" value={data.publishedBlogs} />
           <StatCard label="Drafts" value={data.draftBlogs} />
           <StatCard label="Categories" value={data.categories} />
         </div>
+
+        <section className="mt-8 rounded-lg border border-cyan-900/10 bg-white p-5 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700">Recent Leads</p>
+              <h2 className="mt-2 text-2xl font-semibold text-slate-950">Latest customer requests</h2>
+            </div>
+            <Link href="/admin/leads" className="text-sm font-semibold text-cyan-700 hover:text-cyan-900">
+              Manage all leads
+            </Link>
+          </div>
+
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full min-w-[820px] text-left text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 text-xs uppercase tracking-[0.14em] text-slate-500">
+                  <th className="py-3 pr-4">Customer</th>
+                  <th className="py-3 pr-4">Contact</th>
+                  <th className="py-3 pr-4">Interest</th>
+                  <th className="py-3 pr-4">Status</th>
+                  <th className="py-3 pr-4">Submitted</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.recentLeads.map((lead) => (
+                  <tr key={lead.id} className="border-b border-slate-100 align-top">
+                    <td className="py-4 pr-4">
+                      <p className="font-semibold text-slate-950">{lead.name}</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-cyan-700">
+                        {lead.source === 'BOOKING' ? 'Book Consultation' : 'Contact Form'}
+                      </p>
+                    </td>
+                    <td className="py-4 pr-4 text-slate-600">
+                      <p>{lead.phone}</p>
+                      <p className="mt-1">{lead.email}</p>
+                    </td>
+                    <td className="py-4 pr-4 text-slate-600">{lead.interest || lead.productName || 'Not specified'}</td>
+                    <td className="py-4 pr-4">
+                      <StatusBadge status={lead.status} />
+                    </td>
+                    <td className="py-4 pr-4 text-slate-600">{lead.createdAt.toLocaleDateString('en-IN')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {data.recentLeads.length === 0 ? (
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-8 text-center">
+                <p className="font-semibold text-slate-950">No leads yet</p>
+                <p className="mt-2 text-sm text-slate-600">
+                  Contact form and consultation requests will appear here automatically.
+                </p>
+              </div>
+            ) : null}
+          </div>
+        </section>
 
         <section className="mt-8 rounded-lg border border-cyan-900/10 bg-white p-5 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -81,10 +138,10 @@ export default async function AdminDashboardPage() {
     return (
       <AdminShell title="Dashboard" description="Manage site content, reviews, and publishing from one clean workspace.">
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <StatCard label="Leads" value={0} />
           <StatCard label="Total Blogs" value={0} />
           <StatCard label="Published" value={0} />
           <StatCard label="Drafts" value={0} />
-          <StatCard label="Categories" value={0} />
         </div>
 
         <section className="mt-8 overflow-hidden rounded-lg border border-cyan-900/10 bg-white shadow-sm">
@@ -100,8 +157,15 @@ export default async function AdminDashboardPage() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  href="/admin/reviews"
+                  href="/admin/leads"
                   className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700"
+                >
+                  <UsersRound size={16} aria-hidden="true" />
+                  Manage Leads
+                </Link>
+                <Link
+                  href="/admin/reviews"
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-cyan-300 hover:bg-cyan-50"
                 >
                   <MessageSquareQuote size={16} aria-hidden="true" />
                   Manage Reviews
@@ -142,11 +206,13 @@ function StatCard({ label, value }: { label: string; value: number }) {
 
 function StatusBadge({ status }: { status: string }) {
   const classes =
-    status === 'PUBLISHED'
+    status === 'PUBLISHED' || status === 'WON'
       ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-      : status === 'ARCHIVED'
+      : status === 'ARCHIVED' || status === 'LOST'
         ? 'border-slate-200 bg-slate-100 text-slate-700'
-        : 'border-amber-200 bg-amber-50 text-amber-800'
+        : status === 'NEW' || status === 'DRAFT'
+          ? 'border-amber-200 bg-amber-50 text-amber-800'
+          : 'border-cyan-200 bg-cyan-50 text-cyan-800'
 
   return <span className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-semibold ${classes}`}>{status}</span>
 }

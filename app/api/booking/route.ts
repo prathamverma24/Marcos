@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sendBookingEmail } from '../../../lib/email'
+import { createBookingLead } from '../../../lib/lead-data'
 import { bookingSchema } from '../../../lib/validations'
 
 export async function POST(request: Request) {
@@ -25,9 +26,11 @@ export async function POST(request: Request) {
   }
 
   try {
+    const lead = await createBookingLead(parsed.data)
     const result = await sendBookingEmail(parsed.data)
     return NextResponse.json({
       success: true,
+      leadId: lead?.id,
       ...result,
       message: result.setupRequired
         ? 'Booking request validated. Configure RESEND_API_KEY, CONTACT_EMAIL_TO, and CONTACT_EMAIL_FROM to send emails.'
