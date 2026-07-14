@@ -1,6 +1,7 @@
 export const siteData = {
   companyName: 'Marcos Water Solutions',
   brandText: 'Marcoswatersolution',
+  logoPath: '/images/marcos-water-solutions-logo-clean.png',
   sourceUrl: 'https://final-marcos.vercel.app',
   canonicalUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://final-marcos.vercel.app',
   profileDownload: '/MWSProfile.pdf',
@@ -34,19 +35,18 @@ export const siteData = {
   },
   contact: {
     email: 'marcoswaterssolutionmws@gmail.com',
-    phone: '+91 98765 43210',
-    phoneAlt: '+91 98765 43211',
+    phone: '',
     whatsapp: 'https://wa.me/919311976135',
     whatsappNumbers: [
       { number: '919311976135', display: '+91 93119 76135' },
-      { number: '918448179446', display: '+91 84481 79446' },
-      { number: '919355267559', display: '+91 93552 67559' },
     ],
     addressLines: [
-      '1st floor, F-Block, Sector 25',
-      'Jal Vayu Vihar, Noida, Uttar Pradesh 201301',
+      'E7A/450, Sangam Vihar',
+      'Near Star Gold Public School, N.D.-80',
     ],
-    address: '1st floor, F-Block, Sector 25, Jal Vayu Vihar, Noida, Uttar Pradesh 201301',
+    address: 'E7A/450, Sangam Vihar, Near Star Gold Public School, N.D.-80',
+    mapEmbedUrl:
+      'https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d2442.532652793523!2d77.2437390087005!3d28.50327413893536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjjCsDMwJzExLjciTiA3N8KwMTQnNDMuNiJF!5e0!3m2!1sen!2sin!4v1784032498407!5m2!1sen!2sin',
   },
 }
 

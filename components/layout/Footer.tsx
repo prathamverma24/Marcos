@@ -3,7 +3,7 @@ import { ArrowUp, Download } from 'lucide-react'
 import { navigation } from '../../data/navigation'
 import { products } from '../../data/services'
 import { siteData } from '../../data/site'
-import { mailHref, telHref, whatsappHref } from '../../lib/utils'
+import { mailHref, whatsappHref } from '../../lib/utils'
 
 export default function Footer() {
   return (
@@ -11,10 +11,9 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.2fr_1.8fr]">
         <div>
           <a href="/#top" className="flex items-center gap-3">
-            <span className="relative h-14 w-20 overflow-hidden rounded-md bg-white">
-              <Image src="/images/logo-Bo6gkKPH.jpeg" alt="Marcos Water Solution logo" fill sizes="80px" className="object-contain" />
+            <span className="relative h-16 w-44 overflow-hidden">
+              <Image src={siteData.logoPath} alt="Marcos Water Solutions logo" fill sizes="176px" className="object-contain object-left" />
             </span>
-            <span className="text-lg font-bold text-white">{siteData.companyName}</span>
           </a>
           <p className="mt-5 max-w-md text-sm leading-7 text-slate-400">{siteData.description}</p>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -63,11 +62,6 @@ export default function Footer() {
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">Contact</p>
             <ul className="mt-4 grid gap-3 text-sm">
-              <li>
-                <a href={telHref(siteData.contact.phone)} className="hover:text-white">
-                  {siteData.contact.phone}
-                </a>
-              </li>
               <li>
                 <a href={mailHref(siteData.contact.email)} className="break-words hover:text-white">
                   {siteData.contact.email}

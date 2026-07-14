@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { BookOpen, FilePlus2, LayoutDashboard } from 'lucide-react'
+import { BookOpen, FilePlus2, LayoutDashboard, MessageSquareQuote } from 'lucide-react'
 import { siteData } from '../../data/site'
 import LogoutButton from './LogoutButton'
 
@@ -15,6 +15,7 @@ type AdminShellProps = {
 const adminNavigation = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/blogs', label: 'Blogs', icon: BookOpen },
+  { href: '/admin/reviews', label: 'Reviews', icon: MessageSquareQuote },
   { href: '/admin/blogs/new', label: 'New Blog', icon: FilePlus2 },
 ]
 
@@ -23,11 +24,21 @@ export default function AdminShell({ title, description, children, actions }: Ad
     <main className="min-h-screen bg-[#f5fbff] text-slate-950">
       <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
         <aside className="border-r border-cyan-900/10 bg-slate-950 px-5 py-6 text-white">
-          <Link href="/admin" className="flex items-center gap-3">
-            <span className="relative h-12 w-16 overflow-hidden rounded-md bg-white">
-              <Image src="/images/logo-Bo6gkKPH.jpeg" alt="Marcos Water Solution logo" fill sizes="64px" className="object-contain" />
+          <Link
+            href="/admin"
+            className="group inline-flex w-full max-w-[210px] items-center justify-center rounded-xl bg-white px-4 py-3 shadow-[0_18px_45px_rgba(8,145,178,0.18)] ring-1 ring-cyan-200/20 transition hover:-translate-y-0.5 hover:shadow-[0_22px_55px_rgba(34,197,94,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300"
+            aria-label="Marcos Water Solutions admin dashboard"
+          >
+            <span className="relative block h-14 w-full overflow-hidden">
+              <Image
+                src={siteData.logoPath}
+                alt="Marcos Water Solutions"
+                fill
+                sizes="210px"
+                className="object-contain object-center transition duration-300 group-hover:scale-[1.02]"
+                priority
+              />
             </span>
-            <span className="text-base font-bold">{siteData.companyName}</span>
           </Link>
           <nav className="mt-8 grid gap-2" aria-label="Admin navigation">
             {adminNavigation.map((item) => (

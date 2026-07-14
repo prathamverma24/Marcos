@@ -3,11 +3,11 @@
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Download, Mail, Menu, Phone, Send, X } from 'lucide-react'
+import { Download, Mail, Menu, Send, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { navigation } from '../../data/navigation'
 import { siteData } from '../../data/site'
-import { mailHref, telHref, whatsappHref } from '../../lib/utils'
+import { mailHref, whatsappHref } from '../../lib/utils'
 import ButtonLink from '../ui/ButtonLink'
 
 function hashIdFromHref(href: string) {
@@ -53,10 +53,6 @@ export default function Header() {
               <Mail size={14} aria-hidden="true" />
               {siteData.contact.email}
             </a>
-            <a className="inline-flex items-center gap-2 hover:text-cyan-200" href={telHref(siteData.contact.phone)}>
-              <Phone size={14} aria-hidden="true" />
-              {siteData.contact.phone}
-            </a>
           </div>
           <div className="flex items-center gap-3">
             {siteData.contact.whatsappNumbers.map((item) => (
@@ -87,11 +83,11 @@ export default function Header() {
         aria-label="Primary navigation"
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3">
-          <a href="/#top" className="flex min-w-0 items-center gap-3" aria-label="Marcos Water Solutions home">
-            <span className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md bg-white">
-              <Image src="/images/logo-Bo6gkKPH.jpeg" alt="Marcos Water Solution logo" fill sizes="64px" className="object-contain" priority />
+          <a href="/#top" className="brand-logo" aria-label="Marco's Water Solutions home">
+            <span className="brand-logo__glow" aria-hidden="true" />
+            <span className="brand-logo__image-shell">
+              <Image src={siteData.logoPath} alt="Marco's Water Solutions" fill sizes="(min-width: 768px) 176px, 160px" className="brand-logo__image" priority />
             </span>
-            <span className="truncate text-base font-bold text-slate-950 md:text-lg">{siteData.brandText}</span>
           </a>
 
           <div className="hidden items-center gap-1 lg:flex">

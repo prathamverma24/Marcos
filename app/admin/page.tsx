@@ -1,7 +1,6 @@
 import Link from 'next/link'
-import { FilePlus2 } from 'lucide-react'
+import { BookOpen, Database, FilePlus2, MessageSquareQuote } from 'lucide-react'
 import AdminShell from '../../components/admin/AdminShell'
-import SetupRequired from '../../components/admin/SetupRequired'
 import { getAdminDashboardData } from '../../lib/admin-blog-data'
 import { requireAdmin } from '../../lib/auth'
 
@@ -78,10 +77,55 @@ export default async function AdminDashboardPage() {
         </section>
       </AdminShell>
     )
-  } catch (error) {
+  } catch {
     return (
-      <AdminShell title="Dashboard" description="Connect the database to enable admin blog management.">
-        <SetupRequired message={error instanceof Error ? error.message : undefined} />
+      <AdminShell title="Dashboard" description="Manage site content, reviews, and publishing from one clean workspace.">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <StatCard label="Total Blogs" value={0} />
+          <StatCard label="Published" value={0} />
+          <StatCard label="Drafts" value={0} />
+          <StatCard label="Categories" value={0} />
+        </div>
+
+        <section className="mt-8 overflow-hidden rounded-lg border border-cyan-900/10 bg-white shadow-sm">
+          <div className="grid gap-0 lg:grid-cols-[1fr_0.85fr]">
+            <div className="p-6 md:p-8">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-md bg-cyan-50 text-cyan-700">
+                <Database size={24} aria-hidden="true" />
+              </div>
+              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700">CMS Status</p>
+              <h2 className="mt-2 text-2xl font-semibold text-slate-950">Blog database is not connected</h2>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
+                The public website is still available. Review management can continue in local storage, and blog publishing will become active after the database connection is restored.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/admin/reviews"
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700"
+                >
+                  <MessageSquareQuote size={16} aria-hidden="true" />
+                  Manage Reviews
+                </Link>
+                <Link
+                  href="/blog"
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-cyan-300 hover:bg-cyan-50"
+                >
+                  <BookOpen size={16} aria-hidden="true" />
+                  View Public Blog
+                </Link>
+              </div>
+            </div>
+
+            <div className="border-t border-slate-200 bg-slate-50 p-6 md:p-8 lg:border-l lg:border-t-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Available now</p>
+              <div className="mt-5 grid gap-3">
+                <StatusRow label="Public website" value="Online" tone="good" />
+                <StatusRow label="Customer reviews" value="Local mode" tone="good" />
+                <StatusRow label="Blog CMS" value="Database offline" tone="warn" />
+              </div>
+            </div>
+          </div>
+        </section>
       </AdminShell>
     )
   }
@@ -105,4 +149,18 @@ function StatusBadge({ status }: { status: string }) {
         : 'border-amber-200 bg-amber-50 text-amber-800'
 
   return <span className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-semibold ${classes}`}>{status}</span>
+}
+
+function StatusRow({ label, value, tone }: { label: string; value: string; tone: 'good' | 'warn' }) {
+  const classes =
+    tone === 'good'
+      ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+      : 'border-amber-200 bg-amber-50 text-amber-800'
+
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-md border border-slate-200 bg-white px-4 py-3">
+      <span className="text-sm font-semibold text-slate-700">{label}</span>
+      <span className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-semibold ${classes}`}>{value}</span>
+    </div>
+  )
 }

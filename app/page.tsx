@@ -26,16 +26,16 @@ export default function HomePage() {
     name: siteData.companyName,
     url: siteData.canonicalUrl,
     email: siteData.contact.email,
-    telephone: siteData.contact.phone,
+    ...(siteData.contact.phone ? { telephone: siteData.contact.phone } : {}),
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '1st floor, F-Block, Sector 25',
-      addressLocality: 'Noida',
-      addressRegion: 'Uttar Pradesh',
-      postalCode: '201301',
+      streetAddress: siteData.contact.address,
+      addressLocality: 'New Delhi',
+      addressRegion: 'Delhi',
+      postalCode: '110080',
       addressCountry: 'IN',
     },
-    areaServed: ['Noida', 'Delhi NCR', 'India'],
+    areaServed: ['New Delhi', 'Delhi NCR', 'India'],
     makesOffer: products.map((product) => ({
       '@type': 'Offer',
       itemOffered: {

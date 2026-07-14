@@ -30,17 +30,19 @@ export default function AboutSection() {
         </Reveal>
 
         <Reveal delay={0.08} className="relative">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-white bg-slate-100 shadow-[0_24px_80px_rgba(15,23,42,0.16)]">
-            <Image
-              src="/images/aboutus2-BLWgXE3k.jpg"
-              alt="Marcos Water Solutions water treatment facility"
-              fill
-              sizes="(min-width: 1024px) 42vw, 100vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/76 to-transparent p-6 text-white">
+          <div className="overflow-hidden rounded-lg border border-white bg-white shadow-[0_24px_80px_rgba(15,23,42,0.16)]">
+            <div className="relative aspect-[16/11] bg-white">
+              <Image
+                src="/images/about-image.png"
+                alt="Marcos Water Solutions cabinet based water softener system for apartments"
+                fill
+                sizes="(min-width: 1024px) 42vw, 100vw"
+                className="object-contain"
+              />
+            </div>
+            <div className="border-t border-cyan-900/10 bg-slate-950 p-6 text-white">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-cyan-100">Our Expertise</p>
-              <ul className="mt-4 grid gap-2 text-sm leading-6">
+              <ul className="mt-4 grid gap-2 text-sm leading-6 sm:grid-cols-2 lg:grid-cols-1">
                 {aboutContent.expertise.map((item) => (
                   <li key={item} className="flex gap-2">
                     <CheckCircle2 className="mt-0.5 shrink-0 text-cyan-200" size={16} aria-hidden="true" />

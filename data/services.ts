@@ -386,7 +386,7 @@ export const products: Product[] = [
     title: 'Industrial RO',
     shortTitle: 'Industrial RO',
     category: 'Industrial',
-    image: '/images/ro-industrial-new-C0FiWPxu.jpeg',
+    image: '/images/industry.png',
     summary: 'Large capacity industrial RO systems',
     details:
       'Large-capacity RO systems for manufacturing, facility, and process water needs.',

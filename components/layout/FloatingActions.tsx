@@ -1,17 +1,10 @@
-import { Mail, MessageCircle, Phone } from 'lucide-react'
+import { Mail, MessageCircle } from 'lucide-react'
 import { siteData } from '../../data/site'
-import { mailHref, telHref, whatsappHref } from '../../lib/utils'
+import { mailHref, whatsappHref } from '../../lib/utils'
 
 export default function FloatingActions() {
   return (
     <div className="fixed bottom-4 right-4 z-40 grid gap-2 md:bottom-6 md:right-6" aria-label="Quick contact actions">
-      <a
-        href={telHref(siteData.contact.phone)}
-        className="grid h-11 w-11 place-items-center rounded-md bg-slate-950 text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-300"
-        aria-label={`Call ${siteData.contact.phone}`}
-      >
-        <Phone size={18} aria-hidden="true" />
-      </a>
       <a
         href={mailHref(siteData.contact.email)}
         className="grid h-11 w-11 place-items-center rounded-md bg-cyan-600 text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-cyan-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-300"

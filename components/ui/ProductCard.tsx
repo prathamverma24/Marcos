@@ -1,23 +1,15 @@
 import Image from 'next/image'
-import { ArrowRight, CalendarCheck, CheckCircle2 } from 'lucide-react'
+import { CalendarCheck, CheckCircle2 } from 'lucide-react'
 import type { BookingProduct } from '../../data/products'
-import { cn } from '../../lib/utils'
 
 type ProductCardProps = {
   product: BookingProduct
-  active?: boolean
-  onViewDetails: (product: BookingProduct) => void
   onBook: (product: BookingProduct) => void
 }
 
-export default function ProductCard({ product, active = false, onViewDetails, onBook }: ProductCardProps) {
+export default function ProductCard({ product, onBook }: ProductCardProps) {
   return (
-    <article
-      className={cn(
-        'group flex h-full flex-col overflow-hidden rounded-lg border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl',
-        active ? 'border-cyan-500' : 'border-slate-200',
-      )}
-    >
+    <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
         <Image
           src={product.image}
@@ -45,22 +37,14 @@ export default function ProductCard({ product, active = false, onViewDetails, on
             </li>
           ))}
         </ul>
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="mt-6">
           <button
             type="button"
             onClick={() => onBook(product)}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-200"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-200"
           >
             <CalendarCheck size={16} aria-hidden="true" />
             Book Consultation
-          </button>
-          <button
-            type="button"
-            onClick={() => onViewDetails(product)}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-cyan-400 hover:text-cyan-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-100"
-          >
-            View Details
-            <ArrowRight size={16} aria-hidden="true" />
           </button>
         </div>
       </div>

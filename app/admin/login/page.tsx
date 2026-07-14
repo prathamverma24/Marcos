@@ -16,8 +16,8 @@ export default async function AdminLoginPage() {
     <main className="grid min-h-screen bg-[#f5fbff] px-5 py-10 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
       <section className="mx-auto flex w-full max-w-6xl items-center">
         <div className="max-w-xl">
-          <span className="relative block h-16 w-24 overflow-hidden rounded-lg bg-white shadow-sm">
-            <Image src="/images/logo-Bo6gkKPH.jpeg" alt="Marcos Water Solution logo" fill sizes="96px" className="object-contain" priority />
+          <span className="relative block h-20 w-56 overflow-hidden">
+            <Image src={siteData.logoPath} alt="Marcos Water Solutions logo" fill sizes="224px" className="object-contain object-left" priority />
           </span>
           <p className="mt-8 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-700">Secure Blog CMS</p>
           <h2 className="mt-3 text-4xl font-semibold leading-tight text-slate-950 md:text-5xl">{siteData.companyName}</h2>

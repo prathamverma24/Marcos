@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Mail, MapPin, MessageCircle, Phone, Send } from 'lucide-react'
+import { Mail, MapPin, MessageCircle, Send } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -9,7 +9,7 @@ import { products } from '../../data/services'
 import { siteData } from '../../data/site'
 import type { ContactFormData } from '../../lib/validations'
 import { contactSchema } from '../../lib/validations'
-import { mailHref, telHref, whatsappHref } from '../../lib/utils'
+import { mailHref, whatsappHref } from '../../lib/utils'
 import ButtonLink from '../ui/ButtonLink'
 import Reveal from '../ui/Reveal'
 import SectionHeading from '../ui/SectionHeading'
@@ -66,11 +66,9 @@ export default function ContactSection() {
       }
     } catch (error) {
       setStatus('error')
-      setMessage(error instanceof Error ? error.message : 'There was a problem sending your message. Please call or email Marcos Water Solutions.')
+      setMessage(error instanceof Error ? error.message : 'There was a problem sending your message. Please email Marcos Water Solutions.')
     }
   }
-
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(siteData.contact.address)}&output=embed`
 
   return (
     <section id="contact" className="bg-slate-950 px-5 py-20 text-white lg:px-8">
@@ -79,18 +77,11 @@ export default function ContactSection() {
           <SectionHeading
             eyebrow="Contact"
             title="Start your water system project or request a quote"
-            description="Share the product, service, capacity, and site context you have. Marcos Water Solutions can respond through call, email, or WhatsApp."
+            description="Share the product, service, capacity, and site context you have. Marcos Water Solutions can respond through email or WhatsApp."
             tone="dark"
           />
 
           <div className="mt-8 grid gap-4">
-            <a href={telHref(siteData.contact.phone)} className="contact-line">
-              <Phone size={20} aria-hidden="true" />
-              <span>
-                <span>Phone</span>
-                <strong>{siteData.contact.phone}</strong>
-              </span>
-            </a>
             <a href={mailHref(siteData.contact.email)} className="contact-line">
               <Mail size={20} aria-hidden="true" />
               <span>
@@ -117,18 +108,15 @@ export default function ContactSection() {
               <MessageCircle size={17} aria-hidden="true" />
               WhatsApp
             </ButtonLink>
-            <ButtonLink href={telHref(siteData.contact.phone)} variant="secondary">
-              <Phone size={17} aria-hidden="true" />
-              Call Now
-            </ButtonLink>
           </div>
 
           <div className="mt-8 overflow-hidden rounded-lg border border-white/10 bg-white/5">
             <iframe
               title="Marcos Water Solutions location map"
-              src={mapSrc}
+              src={siteData.contact.mapEmbedUrl}
+              allowFullScreen
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
+              referrerPolicy="strict-origin-when-cross-origin"
               className="h-72 w-full border-0"
             />
           </div>

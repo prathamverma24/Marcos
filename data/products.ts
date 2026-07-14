@@ -24,7 +24,7 @@ export const products: BookingProduct[] = [
       'Installation and support',
     ],
     bookingEnabled: true,
-    image: '/images/ro-industrial-new-C0FiWPxu.jpeg',
+    image: '/images/industry.png',
     detailSlug: 'industrial-ro',
   },
   {
@@ -56,7 +56,7 @@ export const products: BookingProduct[] = [
       'Support and maintenance',
     ],
     bookingEnabled: true,
-    image: '/images/water-softner-CTOMiZvD.jpg',
+    image: '/images/water-softener.png',
     detailSlug: 'water-softener',
   },
   {
@@ -72,7 +72,7 @@ export const products: BookingProduct[] = [
       'Quality-focused setup',
     ],
     bookingEnabled: true,
-    image: '/images/ro-plant-2-D7S_1N_i.jpg',
+    image: '/images/ro-plant-product.png',
     detailSlug: 'ro-plant',
   },
   {
@@ -88,7 +88,7 @@ export const products: BookingProduct[] = [
       'Business-friendly support',
     ],
     bookingEnabled: true,
-    image: '/images/spare-part-BXtYTz4K.jpg',
+    image: '/images/spare.png',
     detailSlug: 'spare-parts',
   },
   {
@@ -104,7 +104,7 @@ export const products: BookingProduct[] = [
       'Post-installation guidance',
     ],
     bookingEnabled: true,
-    image: '/images/commercial-v7X3-RV2.jpg',
+    image: '/images/installation-support.png',
   },
   {
     id: 'maintenance-support',

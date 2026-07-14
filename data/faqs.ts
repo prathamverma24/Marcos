@@ -17,7 +17,7 @@ export const faqs = [
   {
     question: 'How can I request a quote?',
     answer:
-      'Use the contact form, call the listed phone number, send an email, or message Marcos Water Solutions through WhatsApp with your requirement and location.',
+      'Use the contact form, send an email, or message Marcos Water Solutions through WhatsApp with your requirement and location.',
   },
   {
     question: 'Do you offer maintenance and spare parts?',

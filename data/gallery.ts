@@ -8,7 +8,7 @@ export const galleryItems = [
   {
     title: 'Industrial RO',
     category: 'Industrial',
-    image: '/images/ro-industrial-new-C0FiWPxu.jpeg',
+    image: '/images/industry.png',
     alt: 'Industrial RO system',
   },
   {
