@@ -10,9 +10,19 @@ export default function Footer() {
     <footer className="bg-slate-950 px-5 py-12 text-slate-300 lg:px-8">
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.2fr_1.8fr]">
         <div>
-          <a href="/#top" className="flex items-center gap-3">
-            <span className="relative h-16 w-44 overflow-hidden">
-              <Image src={siteData.logoPath} alt="Marcos Water Solutions logo" fill sizes="176px" className="object-contain object-left" />
+          <a
+            href="/#top"
+            className="group inline-flex w-full max-w-[220px] items-center justify-center rounded-xl bg-white px-4 py-3 shadow-[0_18px_50px_rgba(8,145,178,0.16)] ring-1 ring-cyan-200/15 transition hover:-translate-y-0.5 hover:shadow-[0_22px_60px_rgba(34,197,94,0.14)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300"
+            aria-label="Marcos Water Solutions home"
+          >
+            <span className="relative block h-14 w-full overflow-hidden">
+              <Image
+                src={siteData.logoPath}
+                alt="Marcos Water Solutions"
+                fill
+                sizes="220px"
+                className="object-contain object-center transition duration-300 group-hover:scale-[1.02]"
+              />
             </span>
           </a>
           <p className="mt-5 max-w-md text-sm leading-7 text-slate-400">{siteData.description}</p>
