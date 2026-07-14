@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://final-marcos.vercel.app/sitemap.xml

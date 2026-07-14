@@ -1,5 +1,6 @@
 .env
-.env*.local
+.env.*
+!.env.example
 
 .agents/
 .codex/
@@ -7,14 +8,32 @@
 
 node_modules/
 .next/
+dist/
+build/
 out/
+coverage/
+.cache/
+.vite/
+.vercel/
+tmp/
+temp/
+logs/
 
 artifacts/runlogs/
 artifacts/screenshots/
+artifacts/playwright/
 test-results/
 playwright-report/
 
 public/uploads/
 
 *.log
+*.tmp
+*.bak
+*.backup
+*.old
+*.copy
+*.orig
+.DS_Store
+Thumbs.db
 tsconfig.tsbuildinfo

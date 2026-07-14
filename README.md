@@ -240,7 +240,7 @@ The dynamic sitemap at `/sitemap.xml` includes published blog URLs only.
 - `data/blogs.ts`: blog listing and detail content
 - `data/gallery.ts`: gallery images and labels
 - `data/faqs.ts`: FAQ content
-- `data/testimonials.ts`: real testimonials when verified
+- `data/reviews.json`: local fallback storage for customer reviews when the database is unavailable
 - `public/images`: preserved website images
 
 ## Adding Products or Services
