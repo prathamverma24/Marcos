@@ -59,7 +59,7 @@ Rendered production HTML before strict hardening did include inline `style=""` a
 - `next/image` output, such as `position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent`
 - Framer Motion SSR output, such as `opacity` and `transform` animation state
 
-The strict-hardening work therefore needs to avoid Framer Motion inline style output and either remove or explicitly account for generated image style attributes before using `style-src-attr 'none'`.
+The strict-hardening work therefore needed to avoid Framer Motion inline style output and remove generated image style attributes before enforcing `style-src-attr 'none'`.
 
 ## External Origin Audit
 
@@ -67,12 +67,12 @@ The strict-hardening work therefore needs to avoid Framer Motion inline style ou
 |---|---|---|
 | `frame-src` | `https://www.google.com` | Google Maps location iframe |
 | `frame-src` | `https://maps.google.com` | Google Maps compatibility origin |
-| `connect-src` | `https://api.web3forms.com` | Server-side contact email provider fallback |
-| `connect-src` | `https://api.resend.com` | Server-side email provider |
 | `img-src` | `https://res.cloudinary.com` | CMS/admin remote image allowlist from Next config |
 | `img-src` | `https://images.unsplash.com` | CMS/admin remote image allowlist from Next config |
 
 Normal navigation links to WhatsApp, email, telephone, downloaded PDFs, and external websites do not require CSP allowlisting unless the site loads or submits resources to those origins.
+
+`https://api.web3forms.com` and `https://api.resend.com` are used by server-side code in `lib/email.ts`; they are not browser `connect-src` requirements and are not included in the final browser CSP.
 
 No Google Fonts, Google Analytics, Google Tag Manager, Vercel Analytics, Speed Insights, YouTube, chatbot widgets, or external stylesheet/script CDNs were found.
 
@@ -106,7 +106,7 @@ Reported cookies:
 | `_v-anonymous-id` | Vercel platform-controlled or scanner/browser context | Not created in application source |
 | `_v-anonymous-id-renewed` | Vercel platform-controlled or scanner/browser context | Not created in application source |
 | `_vercel_sso_nonce` | Vercel preview/authentication-only | Indicates a protected preview or Vercel authentication redirect, not the public production app |
-| NextAuth cookies | Application-authentication-controlled when admin login is used | Should be `Secure`, `HttpOnly`, and `SameSite=Lax` in production |
+| NextAuth cookies | Application-authentication-controlled when admin login is used | Configured as `Secure`, `HttpOnly`, and `SameSite=Lax` in production where applicable |
 
 The application source does not use `document.cookie`. Admin authentication is handled by NextAuth.
 
@@ -114,37 +114,120 @@ The application source does not use `document.cookie`. Admin authentication is h
 
 No external `<script src="...">` or external stylesheet CDN URLs are loaded by the application. Scripts and styles are same-origin Next.js assets.
 
-Next.js App Router has experimental SRI support for same-origin build assets. SRI is optional for same-origin assets but can be enabled if it does not break the production build.
+Next.js App Router has experimental SRI support for same-origin build assets, but no external immutable CDN script or stylesheet exists in this app. No SRI hashes were added because there was no suitable external subresource to pin. The final rendered homepage had `IntegrityCount: 0` and `Active external script/stylesheet subresources: 0`.
 
 ## Report-Only Rollout Policy
 
-Initial report-only target for local validation:
+Initial report-only target considered for local validation:
 
 ```text
-default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'nonce-{nonce}'; script-src-attr 'none'; style-src 'self' 'nonce-{nonce}'; style-src-attr 'none'; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com; font-src 'self'; connect-src 'self' https://api.web3forms.com https://api.resend.com; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; frame-src https://www.google.com https://maps.google.com; upgrade-insecure-requests
+default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'nonce-{nonce}'; script-src-attr 'none'; style-src 'self' 'nonce-{nonce}'; style-src-attr 'none'; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; frame-src https://www.google.com https://maps.google.com; upgrade-insecure-requests
 ```
 
-## Final CSP
+## Final Enforced CSP
 
-Pending final local validation.
+The strict policy is generated per request in `middleware.ts` with a unique nonce.
+
+```text
+default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'nonce-{per-request-nonce}'; script-src-attr 'none'; style-src 'self' 'nonce-{per-request-nonce}'; style-src-attr 'none'; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; frame-src https://www.google.com https://maps.google.com; upgrade-insecure-requests
+```
+
+Development-only exception:
+
+```text
+script-src includes 'unsafe-eval' only when NODE_ENV !== 'production'
+```
+
+Production does not include `'unsafe-inline'` or `'unsafe-eval'`.
 
 ## Changes Made
 
-Pending final local validation.
+- Moved all security headers from `next.config.mjs` into `middleware.ts` so one source owns headers and can generate a fresh nonce per request.
+- Preserved existing admin authentication middleware behavior.
+- Added per-request CSP nonce and passed it through `x-nonce` plus the request CSP header for Next.js nonce extraction.
+- Added the nonce to the JSON-LD structured data script in `app/page.tsx`.
+- Marked the root layout dynamic so all app pages render with request-specific nonce support.
+- Replaced Framer Motion animation wrappers with CSS animation classes.
+- Removed `framer-motion` from `package.json`.
+- Replaced `next/image` usage with `components/ui/SiteImage.tsx` to remove framework-generated inline `style` attributes.
+- Replaced modal body overflow inline style mutation with a `body.modal-open` class.
+- Explicitly configured NextAuth production cookie names/options for secure admin cookies.
+- Kept `poweredByHeader: false` in `next.config.mjs`.
+
+## Files Modified
+
+- `middleware.ts`
+- `next.config.mjs`
+- `app/layout.tsx`
+- `app/page.tsx`
+- `app/globals.css`
+- `lib/auth.ts`
+- `package.json`
+- `package-lock.json`
+- `components/ui/SiteImage.tsx`
+- `components/ui/Reveal.tsx`
+- `components/ui/BookingModal.tsx`
+- `components/ui/BlogCard.tsx`
+- `components/ui/ProductCard.tsx`
+- `components/layout/Header.tsx`
+- `components/layout/Footer.tsx`
+- `components/admin/AdminShell.tsx`
+- `components/sections/HeroSection.tsx`
+- `components/sections/AboutSection.tsx`
+- `components/sections/GallerySection.tsx`
+- `components/sections/FAQSection.tsx`
+- `app/admin/login/page.tsx`
+- `app/admin/blogs/[id]/preview/page.tsx`
+- `app/blog/[slug]/page.tsx`
+- `SECURITY_AUDIT.md`
 
 ## Test Results
 
-Pending final local validation.
+Local checks run:
+
+```text
+npm run lint
+npm run build
+```
+
+Results:
+
+- Lint: passed with no ESLint warnings or errors.
+- Production build: passed.
+- Local `next start`: started successfully.
+- Local response headers verified on `/`, `/blog`, `/blog/industrial-ro-plants-clean-water-businesses`, `/admin/login`, `/marcos/hero.png`, and invalid `/api/contact` POST.
+- Required headers present locally: `Content-Security-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, and `Permissions-Policy`.
+- `X-Powered-By` absent locally.
+- Rendered homepage checks:
+  - `default-src 'none'`: yes
+  - `script-src-attr 'none'`: yes
+  - `style-src-attr 'none'`: yes
+  - `frame-ancestors 'none'`: yes
+  - `'unsafe-inline'`: no
+  - `'unsafe-eval'`: no in production
+  - Broad `script-src https:` or `*`: no
+  - Nonce changed across requests: yes
+  - Rendered inline script tags: 20, all nonce-backed
+  - Inline scripts without nonce: 0
+  - Rendered `style=""` attributes: 0
+  - Rendered `<style>` blocks: 0
+  - Active external script/stylesheet subresources: 0
+- Contact form API smoke test: passed, created `CONTACT` lead, then test lead was deleted.
+- Booking/quote API smoke test: passed, created `BOOKING` lead, then test lead was deleted.
+
+Browser DevTools console testing was not completed in this environment because the in-app browser control tool was unavailable. Local HTTP and rendered HTML validation were completed.
 
 ## Scanner Results
 
 | Scanner | Before | After |
 |---|---|---|
-| Mozilla HTTP Observatory | B, 70/100 from provided request | Pending final deployed scan |
-| securityheaders.com | Previously D before initial header pass | Pending final deployed scan |
+| Mozilla HTTP Observatory | B, 70/100 from provided request | Not run after strict hardening because this branch was not pushed/deployed per instruction |
+| securityheaders.com | Previously D before initial header pass | Not run after strict hardening because this branch was not pushed/deployed per instruction |
 
 ## Risks and Compatibility Notes
 
 - Per-request nonces require dynamic rendering for pages receiving the CSP nonce.
-- Strict `style-src-attr 'none'` can break generated inline style attributes. This must be verified against rendered production HTML before enforcement.
+- Strict `style-src-attr 'none'` required removing Framer Motion inline style output and replacing `next/image` output with CSS-class-based images.
 - Vercel preview/authentication cookies cannot be corrected from application code; scans must target the public production URL, not a protected preview URL or Vercel dashboard redirect.
+- Replacing `next/image` trades Next image optimization for strict inline-style CSP compatibility. Images are still same-origin static assets or documented CMS remote origins.
+- Development mode may require `script-src 'unsafe-eval'` for React/Next debugging. Production CSP does not include it.
