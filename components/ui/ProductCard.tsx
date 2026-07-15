@@ -1,6 +1,6 @@
-import Image from 'next/image'
 import { CalendarCheck, CheckCircle2 } from 'lucide-react'
 import type { BookingProduct } from '../../data/products'
+import SiteImage from './SiteImage'
 
 type ProductCardProps = {
   product: BookingProduct
@@ -11,11 +11,10 @@ export default function ProductCard({ product, onBook }: ProductCardProps) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-        <Image
+        <SiteImage
           src={product.image}
           alt={`${product.name} solution by Marcos Water Solutions`}
           fill
-          sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
           className="object-cover transition duration-500 group-hover:scale-105"
         />
         <span className="absolute left-3 top-3 rounded-md bg-white/90 px-3 py-1 text-xs font-semibold text-cyan-800 shadow-sm">

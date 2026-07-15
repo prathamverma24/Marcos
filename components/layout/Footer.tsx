@@ -1,9 +1,9 @@
-import Image from 'next/image'
 import { ArrowUp, Download } from 'lucide-react'
 import { navigation } from '../../data/navigation'
 import { products } from '../../data/services'
 import { siteData } from '../../data/site'
 import { mailHref, whatsappHref } from '../../lib/utils'
+import SiteImage from '../ui/SiteImage'
 
 export default function Footer() {
   return (
@@ -16,11 +16,10 @@ export default function Footer() {
             aria-label="Marcos Water Solutions home"
           >
             <span className="relative block h-14 w-full overflow-hidden">
-              <Image
+              <SiteImage
                 src={siteData.logoPath}
                 alt="Marcos Water Solutions"
                 fill
-                sizes="220px"
                 className="object-contain object-center transition duration-300 group-hover:scale-[1.02]"
               />
             </span>

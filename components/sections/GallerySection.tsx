@@ -1,12 +1,11 @@
 'use client'
 
-import Image from 'next/image'
-import { AnimatePresence, motion } from 'framer-motion'
 import { Maximize2, X } from 'lucide-react'
 import { useState } from 'react'
 import { galleryItems } from '../../data/gallery'
 import Reveal from '../ui/Reveal'
 import SectionHeading from '../ui/SectionHeading'
+import SiteImage from '../ui/SiteImage'
 
 export default function GallerySection() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
@@ -31,11 +30,10 @@ export default function GallerySection() {
                 onClick={() => setActiveIndex(index)}
                 className="group relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-100 text-left shadow-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cyan-200"
               >
-                <Image
+                <SiteImage
                   src={item.image}
                   alt={item.alt}
                   fill
-                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   className="object-cover transition duration-500 group-hover:scale-105"
                 />
                 <span className="absolute inset-0 bg-gradient-to-t from-slate-950/72 via-slate-950/10 to-transparent" />
@@ -52,25 +50,18 @@ export default function GallerySection() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {activeItem ? (
-          <motion.div
-            className="fixed inset-0 z-[70] grid place-items-center bg-slate-950/80 p-4 backdrop-blur"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            role="dialog"
-            aria-modal="true"
-            aria-label={activeItem.title}
-            onClick={() => setActiveIndex(null)}
+      {activeItem ? (
+        <div
+          className="modal-backdrop fixed inset-0 z-[70] grid place-items-center bg-slate-950/80 p-4 backdrop-blur"
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeItem.title}
+          onClick={() => setActiveIndex(null)}
+        >
+          <div
+            className="modal-panel relative w-full max-w-5xl overflow-hidden rounded-lg bg-white"
+            onClick={(event) => event.stopPropagation()}
           >
-            <motion.div
-              className="relative w-full max-w-5xl overflow-hidden rounded-lg bg-white"
-              initial={{ scale: 0.96, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.96, y: 20 }}
-              onClick={(event) => event.stopPropagation()}
-            >
               <button
                 type="button"
                 onClick={() => setActiveIndex(null)}
@@ -80,16 +71,15 @@ export default function GallerySection() {
                 <X size={20} aria-hidden="true" />
               </button>
               <div className="relative aspect-[16/10] bg-slate-100">
-                <Image src={activeItem.image} alt={activeItem.alt} fill sizes="90vw" className="object-contain" />
+                <SiteImage src={activeItem.image} alt={activeItem.alt} fill className="object-contain" />
               </div>
               <div className="border-t border-slate-200 p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700">{activeItem.category}</p>
                 <h3 className="mt-2 text-2xl font-semibold text-slate-950">{activeItem.title}</h3>
               </div>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+          </div>
+        </div>
+      ) : null}
     </section>
   )
 }

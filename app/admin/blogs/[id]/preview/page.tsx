@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import AdminShell from '../../../../../components/admin/AdminShell'
 import SetupRequired from '../../../../../components/admin/SetupRequired'
 import RichTextRenderer from '../../../../../components/ui/RichTextRenderer'
+import SiteImage from '../../../../../components/ui/SiteImage'
 import { getAdminBlogById } from '../../../../../lib/admin-blog-data'
 import { requireAdmin } from '../../../../../lib/auth'
 
@@ -40,11 +40,10 @@ export default async function PreviewBlogPage({ params }: PreviewBlogPageProps) 
             <div className="bg-white px-5 py-10 lg:px-8">
               <div className="mx-auto max-w-5xl">
                 <div className="relative aspect-[16/9] overflow-hidden rounded-lg bg-slate-100 shadow-[0_20px_70px_rgba(8,145,178,0.12)]">
-                  <Image
+                  <SiteImage
                     src={blog.featuredImage}
                     alt={blog.imageAlt || `${blog.title} featured image`}
                     fill
-                    sizes="(min-width: 1024px) 960px, 100vw"
                     className="object-cover"
                   />
                 </div>

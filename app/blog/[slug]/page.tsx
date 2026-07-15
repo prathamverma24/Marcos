@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, CalendarDays, Clock, Tag } from 'lucide-react'
@@ -8,6 +7,7 @@ import Header from '../../../components/layout/Header'
 import BlogCard from '../../../components/ui/BlogCard'
 import ButtonLink from '../../../components/ui/ButtonLink'
 import RichTextRenderer from '../../../components/ui/RichTextRenderer'
+import SiteImage from '../../../components/ui/SiteImage'
 import { getPublishedBlogBySlug, getRelatedPublishedBlogs } from '../../../lib/blog-data'
 import { siteData } from '../../../data/site'
 
@@ -104,11 +104,10 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
           <div className="bg-white px-5 py-10 lg:px-8">
             <div className="mx-auto max-w-5xl">
               <div className="relative aspect-[16/9] overflow-hidden rounded-lg bg-slate-100 shadow-[0_20px_70px_rgba(8,145,178,0.12)]">
-                <Image
+                <SiteImage
                   src={blog.featuredImage}
                   alt={blog.imageAlt}
                   fill
-                  sizes="(min-width: 1024px) 960px, 100vw"
                   className="object-cover"
                   priority
                 />

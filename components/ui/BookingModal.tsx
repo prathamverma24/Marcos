@@ -1,7 +1,6 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { CalendarCheck, X } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -26,7 +25,6 @@ function todayInputValue() {
 }
 
 export default function BookingModal({ product, open, onClose }: BookingModalProps) {
-  const reduceMotion = useReducedMotion()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [statusMessage, setStatusMessage] = useState('')
@@ -78,12 +76,11 @@ export default function BookingModal({ product, open, onClose }: BookingModalPro
       }
     }
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    document.body.classList.add('modal-open')
     window.addEventListener('keydown', onKeyDown)
 
     return () => {
-      document.body.style.overflow = previousOverflow
+      document.body.classList.remove('modal-open')
       window.removeEventListener('keydown', onKeyDown)
     }
   }, [onClose, open])
@@ -115,30 +112,19 @@ export default function BookingModal({ product, open, onClose }: BookingModalPro
     }
   }
 
-  return (
-    <AnimatePresence>
-      {open && product ? (
-        <motion.div
-          className="fixed inset-0 z-[80] flex items-end justify-center bg-slate-950/68 p-0 backdrop-blur-sm sm:items-center sm:p-5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="booking-modal-title"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              onClose()
-            }
-          }}
-        >
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 28, scale: 0.97 }}
-            animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-            exit={reduceMotion ? undefined : { opacity: 0, y: 28, scale: 0.97 }}
-            transition={{ duration: 0.22 }}
-            className="max-h-[94svh] w-full overflow-y-auto rounded-t-lg bg-white shadow-2xl sm:max-w-3xl sm:rounded-lg"
-          >
+  return open && product ? (
+    <div
+      className="modal-backdrop fixed inset-0 z-[80] flex items-end justify-center bg-slate-950/68 p-0 backdrop-blur-sm sm:items-center sm:p-5"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="booking-modal-title"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose()
+        }
+      }}
+    >
+      <div className="modal-panel max-h-[94svh] w-full overflow-y-auto rounded-t-lg bg-white shadow-2xl sm:max-w-3xl sm:rounded-lg">
             <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-slate-200 bg-white/95 p-5 backdrop-blur">
               <div>
                 <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700">
@@ -216,10 +202,8 @@ export default function BookingModal({ product, open, onClose }: BookingModalPro
               </button>
 
               {status !== 'idle' ? (
-                <motion.p
-                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                  animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-                  className={`mt-4 rounded-lg border px-4 py-3 text-sm leading-6 ${
+                <p
+                  className={`status-message mt-4 rounded-lg border px-4 py-3 text-sm leading-6 ${
                     status === 'success'
                       ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
                       : 'border-red-200 bg-red-50 text-red-800'
@@ -227,14 +211,12 @@ export default function BookingModal({ product, open, onClose }: BookingModalPro
                   role="status"
                 >
                   {statusMessage}
-                </motion.p>
+                </p>
               ) : null}
             </form>
-          </motion.div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
-  )
+      </div>
+    </div>
+  ) : null
 }
 
 function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {

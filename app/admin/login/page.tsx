@@ -1,7 +1,7 @@
-import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 import AdminLoginForm from '../../../components/admin/AdminLoginForm'
+import SiteImage from '../../../components/ui/SiteImage'
 import { siteData } from '../../../data/site'
 import { getAdminSession } from '../../../lib/auth'
 
@@ -17,7 +17,7 @@ export default async function AdminLoginPage() {
       <section className="mx-auto flex w-full max-w-6xl items-center">
         <div className="max-w-xl">
           <span className="relative block h-20 w-56 overflow-hidden">
-            <Image src={siteData.logoPath} alt="Marcos Water Solutions logo" fill sizes="224px" className="object-contain object-left" priority />
+            <SiteImage src={siteData.logoPath} alt="Marcos Water Solutions logo" fill className="object-contain object-left" priority />
           </span>
           <p className="mt-8 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-700">Secure Blog CMS</p>
           <h2 className="mt-3 text-4xl font-semibold leading-tight text-slate-950 md:text-5xl">{siteData.companyName}</h2>

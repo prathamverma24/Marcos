@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import { CheckCircle2 } from 'lucide-react'
 import { aboutContent } from '../../data/site'
 import Reveal from '../ui/Reveal'
 import SectionHeading from '../ui/SectionHeading'
+import SiteImage from '../ui/SiteImage'
 
 export default function AboutSection() {
   return (
@@ -32,11 +32,10 @@ export default function AboutSection() {
         <Reveal delay={0.08} className="relative">
           <div className="overflow-hidden rounded-lg border border-white bg-white shadow-[0_24px_80px_rgba(15,23,42,0.16)]">
             <div className="relative aspect-[16/11] bg-white">
-              <Image
+              <SiteImage
                 src="/images/about-image.png"
                 alt="Marcos Water Solutions cabinet based water softener system for apartments"
                 fill
-                sizes="(min-width: 1024px) 42vw, 100vw"
                 className="object-contain"
               />
             </div>

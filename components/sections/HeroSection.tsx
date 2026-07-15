@@ -1,22 +1,19 @@
 'use client'
 
-import Image from 'next/image'
-import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowDown, Droplets, ShieldCheck, Wrench } from 'lucide-react'
 import { siteData } from '../../data/site'
 import ButtonLink from '../ui/ButtonLink'
+import SiteImage from '../ui/SiteImage'
 
 export default function HeroSection() {
-  const reduceMotion = useReducedMotion()
   const activeSlide = siteData.hero.slides[0]
 
   return (
     <section id="top" className="relative isolate min-h-[88svh] overflow-hidden pt-28 md:pt-36">
-      <Image
+      <SiteImage
         src={activeSlide.image}
         alt="Marcos Water Solutions water treatment system"
         fill
-        sizes="100vw"
         className="object-cover"
         priority
       />
@@ -25,12 +22,7 @@ export default function HeroSection() {
       <div className="water-ribbon absolute inset-x-0 bottom-0 h-28" aria-hidden="true" />
 
       <div className="relative mx-auto flex min-h-[calc(88svh-9rem)] max-w-7xl items-center px-5 pb-16 lg:px-8">
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, ease: 'easeOut' }}
-          className="max-w-3xl text-white"
-        >
+        <div className="hero-copy max-w-3xl text-white">
           <p className="inline-flex items-center gap-2 rounded-md border border-white/30 bg-white/12 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] backdrop-blur">
             <Droplets size={16} aria-hidden="true" />
             {siteData.hero.eyebrow}
@@ -58,7 +50,7 @@ export default function HeroSection() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       <a

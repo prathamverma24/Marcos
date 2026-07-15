@@ -1,14 +1,13 @@
 'use client'
 
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { AnimatePresence, motion } from 'framer-motion'
 import { Download, Mail, Menu, Send, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { navigation } from '../../data/navigation'
 import { siteData } from '../../data/site'
 import { mailHref, whatsappHref } from '../../lib/utils'
 import ButtonLink from '../ui/ButtonLink'
+import SiteImage from '../ui/SiteImage'
 
 function hashIdFromHref(href: string) {
   return href.includes('#') ? href.split('#')[1] : ''
@@ -86,7 +85,7 @@ export default function Header() {
           <a href="/#top" className="brand-logo" aria-label="Marco's Water Solutions home">
             <span className="brand-logo__glow" aria-hidden="true" />
             <span className="brand-logo__image-shell">
-              <Image src={siteData.logoPath} alt="Marco's Water Solutions" fill sizes="(min-width: 768px) 176px, 160px" className="brand-logo__image" priority />
+              <SiteImage src={siteData.logoPath} alt="Marco's Water Solutions" fill className="brand-logo__image" priority />
             </span>
           </a>
 
@@ -125,21 +124,9 @@ export default function Header() {
         </div>
       </nav>
 
-      <AnimatePresence>
-        {isOpen ? (
-          <motion.div
-            className="fixed inset-0 z-50 bg-slate-950/55 backdrop-blur-sm lg:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-              className="absolute right-0 top-0 h-full w-full max-w-sm border-l border-slate-200 bg-white p-5 shadow-2xl"
-            >
+      {isOpen ? (
+        <div className="mobile-menu-backdrop fixed inset-0 z-50 bg-slate-950/55 backdrop-blur-sm lg:hidden">
+          <div className="mobile-menu-panel absolute right-0 top-0 h-full w-full max-w-sm border-l border-slate-200 bg-white p-5 shadow-2xl">
               <div className="flex items-center justify-between gap-4">
                 <span className="font-semibold text-slate-950">{siteData.companyName}</span>
                 <button
@@ -172,10 +159,9 @@ export default function Header() {
                   Download Profile
                 </ButtonLink>
               </div>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+          </div>
+        </div>
+      ) : null}
     </header>
   )
 }

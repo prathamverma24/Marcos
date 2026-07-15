@@ -1,6 +1,5 @@
 'use client'
 
-import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { faqs } from '../../data/faqs'
@@ -38,18 +37,11 @@ export default function FAQSection() {
                     <span className="text-base font-semibold text-slate-950 md:text-lg">{faq.question}</span>
                     <ChevronDown className={cn('shrink-0 text-cyan-700 transition', isOpen && 'rotate-180')} size={20} aria-hidden="true" />
                   </button>
-                  <AnimatePresence initial={false}>
-                    {isOpen ? (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.24 }}
-                      >
-                        <p className="px-5 pb-5 text-sm leading-7 text-slate-700 md:text-base">{faq.answer}</p>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
+                  {isOpen ? (
+                    <div className="faq-answer">
+                      <p className="px-5 pb-5 text-sm leading-7 text-slate-700 md:text-base">{faq.answer}</p>
+                    </div>
+                  ) : null}
                 </div>
               </Reveal>
             )

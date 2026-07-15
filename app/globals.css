@@ -31,6 +31,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 button,
 input,
 textarea,
@@ -74,6 +78,94 @@ a {
     repeating-radial-gradient(ellipse at 50% 100%, rgba(103, 232, 249, 0.44) 0 3px, transparent 4px 16px);
   mask-image: linear-gradient(to top, black, transparent);
   animation: waterShift 9s ease-in-out infinite alternate;
+}
+
+.csp-reveal {
+  animation: cspReveal 560ms ease-out both;
+}
+
+.hero-copy {
+  animation: heroCopyIn 760ms ease-out both;
+}
+
+.mobile-menu-backdrop,
+.modal-backdrop {
+  animation: fadeIn 180ms ease-out both;
+}
+
+.mobile-menu-panel {
+  animation: mobileMenuSlideIn 240ms ease-out both;
+}
+
+.modal-panel {
+  animation: modalPanelIn 220ms ease-out both;
+}
+
+.faq-answer,
+.status-message {
+  animation: fadeSlideIn 220ms ease-out both;
+}
+
+@keyframes cspReveal {
+  from {
+    opacity: 0.92;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroCopyIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mobileMenuSlideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes modalPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes waterShift {
@@ -487,7 +579,15 @@ a {
 
   .brand-logo,
   .brand-logo__image,
-  .brand-logo__glow {
+  .brand-logo__glow,
+  .csp-reveal,
+  .hero-copy,
+  .mobile-menu-backdrop,
+  .mobile-menu-panel,
+  .modal-backdrop,
+  .modal-panel,
+  .faq-answer,
+  .status-message {
     animation: none !important;
     transition: none !important;
   }

@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { BookOpen, FilePlus2, Inbox, LayoutDashboard, MessageSquareQuote } from 'lucide-react'
 import { siteData } from '../../data/site'
+import SiteImage from '../ui/SiteImage'
 import LogoutButton from './LogoutButton'
 
 type AdminShellProps = {
@@ -31,11 +31,10 @@ export default function AdminShell({ title, description, children, actions }: Ad
             aria-label="Marcos Water Solutions admin dashboard"
           >
             <span className="relative block h-14 w-full overflow-hidden">
-              <Image
+              <SiteImage
                 src={siteData.logoPath}
                 alt="Marcos Water Solutions"
                 fill
-                sizes="210px"
                 className="object-contain object-center transition duration-300 group-hover:scale-[1.02]"
                 priority
               />
