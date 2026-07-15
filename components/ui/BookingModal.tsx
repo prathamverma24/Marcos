@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import type { BookingProduct } from '../../data/products'
 import type { BookingFormData } from '../../lib/validations'
 import { bookingSchema } from '../../lib/validations'
+import { submitBookingToWeb3Forms } from '../../lib/web3forms-client'
 
 type BookingModalProps = {
   product: BookingProduct | null
@@ -93,13 +94,23 @@ export default function BookingModal({ product, open, onClose }: BookingModalPro
       const response = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, skipNotification: true }),
       })
 
       const payload = (await response.json()) as { success?: boolean; error?: string; setupRequired?: boolean }
 
       if (!response.ok || !payload.success) {
         throw new Error(payload.error || 'Something went wrong. Please try again or contact us directly.')
+      }
+
+      try {
+        await submitBookingToWeb3Forms(data)
+      } catch (error) {
+        throw new Error(
+          `Your booking request was saved in the dashboard, but the email notification could not be sent. ${
+            error instanceof Error ? error.message : 'Please check Web3Forms.'
+          }`,
+        )
       }
 
       setStatus('success')

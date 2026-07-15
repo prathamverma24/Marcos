@@ -15,7 +15,7 @@ function createContentSecurityPolicy(nonce: string) {
     "base-uri 'none'",
     "object-src 'none'",
     "frame-ancestors 'none'",
-    "form-action 'self'",
+    "form-action 'self' https://api.web3forms.com",
     `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ''}`,
     "script-src-attr 'none'",
     `style-src 'self' 'nonce-${nonce}'`,
@@ -26,7 +26,7 @@ function createContentSecurityPolicy(nonce: string) {
     "media-src 'self' blob:",
     "worker-src 'self' blob:",
     "manifest-src 'self'",
-    "frame-src https://www.google.com https://maps.google.com",
+    "frame-src https://www.google.com https://maps.google.com https://api.web3forms.com",
     'upgrade-insecure-requests',
   ]
 

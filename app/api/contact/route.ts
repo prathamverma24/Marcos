@@ -27,6 +27,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, provider: 'spam-filter' })
   }
 
+  const skipNotification =
+    typeof body === 'object' &&
+    body !== null &&
+    'skipNotification' in body &&
+    (body as { skipNotification?: unknown }).skipNotification === true
+
   try {
     const shouldCaptureLead = isDatabaseConfigured()
     const lead = await createContactLead(parsed.data)
@@ -47,17 +53,19 @@ export async function POST(request: Request) {
       revalidatePath('/admin/leads')
     }
 
-    try {
-      emailResult = await sendContactEmail(parsed.data)
-    } catch (error) {
-      console.error('Unable to send contact email notification', error)
+    if (!skipNotification) {
+      try {
+        emailResult = await sendContactEmail(parsed.data)
+      } catch (error) {
+        console.error('Unable to send contact email notification', error)
 
-      if (!lead) {
-        throw error
+        if (!lead) {
+          throw error
+        }
       }
     }
 
-    if (!lead && emailResult?.setupRequired) {
+    if (!lead && !skipNotification && emailResult?.setupRequired) {
       return NextResponse.json(
         {
           success: false,
@@ -72,8 +80,8 @@ export async function POST(request: Request) {
       success: true,
       leadId: lead?.id,
       leadCaptured: Boolean(lead),
-      notificationProvider: emailResult?.provider || 'failed',
-      notificationDelivered: Boolean(emailResult && !emailResult.setupRequired),
+      notificationProvider: skipNotification ? 'client-web3forms' : emailResult?.provider || 'failed',
+      notificationDelivered: skipNotification || Boolean(emailResult && !emailResult.setupRequired),
       message: lead
         ? 'Thank you. Your inquiry has been received, and Marcos Water Solutions will contact you soon.'
         : 'Message sent successfully. Marcos Water Solutions will contact you soon.',

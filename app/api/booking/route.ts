@@ -25,9 +25,18 @@ export async function POST(request: Request) {
     )
   }
 
+  const skipNotification =
+    typeof body === 'object' &&
+    body !== null &&
+    'skipNotification' in body &&
+    (body as { skipNotification?: unknown }).skipNotification === true
+
   try {
     const lead = await createBookingLead(parsed.data)
-    const result = await sendBookingEmail(parsed.data)
+    const result = skipNotification
+      ? { provider: 'client-web3forms', setupRequired: false }
+      : await sendBookingEmail(parsed.data)
+
     return NextResponse.json({
       success: true,
       leadId: lead?.id,

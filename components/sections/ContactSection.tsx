@@ -10,6 +10,7 @@ import { siteData } from '../../data/site'
 import type { ContactFormData } from '../../lib/validations'
 import { contactSchema } from '../../lib/validations'
 import { mailHref, whatsappHref } from '../../lib/utils'
+import { submitContactToWeb3Forms } from '../../lib/web3forms-client'
 import ButtonLink from '../ui/ButtonLink'
 import Reveal from '../ui/Reveal'
 import SectionHeading from '../ui/SectionHeading'
@@ -47,13 +48,23 @@ export default function ContactSection() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, skipNotification: true }),
       })
 
       const payload = (await response.json()) as ApiResponse
 
       if (!response.ok || !payload.success) {
         throw new Error(payload.error || 'Could not send the message')
+      }
+
+      try {
+        await submitContactToWeb3Forms(data)
+      } catch (error) {
+        throw new Error(
+          `Your inquiry was saved in the dashboard, but the email notification could not be sent. ${
+            error instanceof Error ? error.message : 'Please check Web3Forms.'
+          }`,
+        )
       }
 
       setStatus('success')

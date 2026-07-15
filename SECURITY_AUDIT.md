@@ -67,18 +67,20 @@ The strict-hardening work therefore needed to avoid Framer Motion inline style o
 |---|---|---|
 | `frame-src` | `https://www.google.com` | Google Maps location iframe |
 | `frame-src` | `https://maps.google.com` | Google Maps compatibility origin |
+| `frame-src` | `https://api.web3forms.com` | Hidden Web3Forms response target for public contact and quote form email delivery |
+| `form-action` | `https://api.web3forms.com` | Browser-native public contact and quote form email handoff |
 | `img-src` | `https://res.cloudinary.com` | CMS/admin remote image allowlist from Next config |
 | `img-src` | `https://images.unsplash.com` | CMS/admin remote image allowlist from Next config |
 
 Normal navigation links to WhatsApp, email, telephone, downloaded PDFs, and external websites do not require CSP allowlisting unless the site loads or submits resources to those origins.
 
-`https://api.web3forms.com` and `https://api.resend.com` are used by server-side code in `lib/email.ts`; they are not browser `connect-src` requirements and are not included in the final browser CSP.
+`https://api.web3forms.com` is now a browser `form-action` and `frame-src` requirement because the public contact and quote forms post to Web3Forms after same-origin dashboard lead capture succeeds. `https://api.resend.com` remains server-side only in `lib/email.ts` and is not included in the browser CSP.
 
 No Google Fonts, Google Analytics, Google Tag Manager, Vercel Analytics, Speed Insights, YouTube, chatbot widgets, or external stylesheet/script CDNs were found.
 
 ## Forms and APIs
 
-Application forms submit to same-origin endpoints:
+Application forms capture leads through same-origin endpoints:
 
 - `/api/contact`
 - `/api/booking`
@@ -91,7 +93,7 @@ Server-side email integrations use:
 - `https://api.web3forms.com/submit`
 - `https://api.resend.com/emails`
 
-No browser form directly posts to a third-party origin.
+Public contact and quote forms also submit a hidden browser-native form post to `https://api.web3forms.com/submit` after the same-origin dashboard lead is saved.
 
 ## Cookie Investigation
 
@@ -121,7 +123,7 @@ Next.js App Router has experimental SRI support for same-origin build assets, bu
 Initial report-only target considered for local validation:
 
 ```text
-default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'nonce-{nonce}'; script-src-attr 'none'; style-src 'self' 'nonce-{nonce}'; style-src-attr 'none'; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; frame-src https://www.google.com https://maps.google.com; upgrade-insecure-requests
+default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://api.web3forms.com; script-src 'self' 'nonce-{nonce}'; script-src-attr 'none'; style-src 'self' 'nonce-{nonce}'; style-src-attr 'none'; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; frame-src https://www.google.com https://maps.google.com https://api.web3forms.com; upgrade-insecure-requests
 ```
 
 ## Final Enforced CSP
@@ -129,7 +131,7 @@ default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; 
 The strict policy is generated per request in `middleware.ts` with a unique nonce.
 
 ```text
-default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'nonce-{per-request-nonce}'; script-src-attr 'none'; style-src 'self' 'nonce-{per-request-nonce}'; style-src-attr 'none'; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; frame-src https://www.google.com https://maps.google.com; upgrade-insecure-requests
+default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://api.web3forms.com; script-src 'self' 'nonce-{per-request-nonce}'; script-src-attr 'none'; style-src 'self' 'nonce-{per-request-nonce}'; style-src-attr 'none'; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; frame-src https://www.google.com https://maps.google.com https://api.web3forms.com; upgrade-insecure-requests
 ```
 
 Development-only exception:
