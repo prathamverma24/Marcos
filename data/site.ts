@@ -18,7 +18,7 @@ export const siteData = {
       {
         title: 'MAKING PURE DRINKING WATER',
         subtitle: 'Advanced Water Treatment Solutions',
-        image: '/images/hero-DJzKji3N.jpeg',
+        image: '/marcos/hero.png',
       },
       {
         title: 'RO PLANT SYSTEMS',

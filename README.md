@@ -199,14 +199,14 @@ Then replace the local storage section inside `app/api/admin/upload/route.ts` wi
 
 ## Contact Form Setup
 
-The contact form validates on the client and server, includes a honeypot field, and posts to `app/api/contact/route.ts`.
+The contact form validates on the client and server, includes a honeypot field, posts to `app/api/contact/route.ts`, and saves each real submission as a `CONTACT` lead for `/admin` and `/admin/leads` when the database is configured.
 
 Email delivery supports either:
 
 - `WEB3FORMS_ACCESS_KEY`
 - `RESEND_API_KEY` plus `CONTACT_EMAIL_TO` and `CONTACT_EMAIL_FROM`
 
-If no provider is configured, the form still validates and returns a clear setup state instead of exposing secrets in the browser.
+If no email provider is configured but the database is available, the visitor still receives a success response because the lead has been captured for admin follow-up.
 
 ## Product Booking Setup
 

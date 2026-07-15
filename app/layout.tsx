@@ -21,9 +21,9 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/images/hero-DJzKji3N.jpeg',
-        width: 1200,
-        height: 630,
+        url: '/marcos/hero.png',
+        width: 1774,
+        height: 887,
         alt: 'Marcos Water Solutions water treatment systems',
       },
     ],
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Marcos Water Solutions',
     description: siteData.description,
-    images: ['/images/hero-DJzKji3N.jpeg'],
+    images: ['/marcos/hero.png'],
   },
   icons: {
     icon: '/favicon.svg',

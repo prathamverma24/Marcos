@@ -16,13 +16,13 @@ import SectionHeading from '../ui/SectionHeading'
 
 type ApiResponse = {
   success?: boolean
-  setupRequired?: boolean
-  provider?: string
+  leadCaptured?: boolean
+  message?: string
   error?: string
 }
 
 export default function ContactSection() {
-  const [status, setStatus] = useState<'idle' | 'success' | 'setup' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
 
   const {
@@ -56,14 +56,22 @@ export default function ContactSection() {
         throw new Error(payload.error || 'Could not send the message')
       }
 
-      if (payload.setupRequired) {
-        setStatus('setup')
-        setMessage('Your details are valid. Add WEB3FORMS_ACCESS_KEY or RESEND_API_KEY on the server to email submissions automatically.')
-      } else {
-        setStatus('success')
-        setMessage('Message sent successfully. Marcos Water Solutions will contact you soon.')
-        reset({ interest: products[0].title, organization: '', honeypot: '' })
-      }
+      setStatus('success')
+      setMessage(
+        payload.message ||
+          (payload.leadCaptured
+            ? 'Thank you. Your inquiry has been received, and Marcos Water Solutions will contact you soon.'
+            : 'Message sent successfully. Marcos Water Solutions will contact you soon.'),
+      )
+      reset({
+        name: '',
+        phone: '',
+        email: '',
+        organization: '',
+        interest: products[0].title,
+        message: '',
+        honeypot: '',
+      })
     } catch (error) {
       setStatus('error')
       setMessage(error instanceof Error ? error.message : 'There was a problem sending your message. Please email Marcos Water Solutions.')
@@ -178,9 +186,7 @@ export default function ContactSection() {
                 className={`mt-4 rounded-lg border px-4 py-3 text-sm leading-6 ${
                   status === 'success'
                     ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                    : status === 'setup'
-                      ? 'border-amber-200 bg-amber-50 text-amber-800'
-                      : 'border-red-200 bg-red-50 text-red-800'
+                    : 'border-red-200 bg-red-50 text-red-800'
                 }`}
                 role="status"
               >
