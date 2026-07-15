@@ -18,7 +18,7 @@ function createContentSecurityPolicy(nonce: string) {
     "form-action 'self'",
     `script-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-eval'" : ''}`,
     "script-src-attr 'none'",
-    `style-src 'self' 'nonce-${nonce}'${isDev ? " 'unsafe-inline'" : ''}`,
+    `style-src 'self' 'nonce-${nonce}'`,
     "style-src-attr 'none'",
     "img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com",
     "font-src 'self'",
