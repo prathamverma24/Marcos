@@ -3,17 +3,20 @@
 import { Filter } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { products as bookingProducts, type BookingProduct } from '../../data/products'
-import { services } from '../../data/services'
+import { products as productDetails, services, type Product } from '../../data/services'
 import { cn } from '../../lib/utils'
 import BookingModal from '../ui/BookingModal'
 import ProductCard from '../ui/ProductCard'
+import ProductDetailModal from '../ui/ProductDetailModal'
 import Reveal from '../ui/Reveal'
 import SectionHeading from '../ui/SectionHeading'
 
 export default function ProductShowcase() {
   const categories = useMemo(() => ['All', ...Array.from(new Set(bookingProducts.map((product) => product.category)))], [])
+  const detailProductMap = useMemo(() => new Map(productDetails.map((product) => [product.slug, product])), [])
   const [category, setCategory] = useState('All')
   const [selectedProduct, setSelectedProduct] = useState<BookingProduct | null>(null)
+  const [selectedDetailProduct, setSelectedDetailProduct] = useState<Product | null>(null)
   const [isBookingOpen, setIsBookingOpen] = useState(false)
 
   const visibleProducts =
@@ -23,6 +26,31 @@ export default function ProductShowcase() {
     setSelectedProduct(product)
     setIsBookingOpen(true)
   }
+
+  const handleViewDetails = (product: BookingProduct) => {
+    const details = product.detailSlug ? detailProductMap.get(product.detailSlug) : null
+
+    if (details) {
+      setSelectedDetailProduct(details)
+    }
+  }
+
+  const handleBookFromDetails = () => {
+    if (!selectedDetailProduct) {
+      return
+    }
+
+    const bookingProduct = bookingProducts.find((product) => product.detailSlug === selectedDetailProduct.slug)
+
+    if (bookingProduct) {
+      setSelectedDetailProduct(null)
+      handleBookProduct(bookingProduct)
+    }
+  }
+
+  const selectedDetailBookingProduct = selectedDetailProduct
+    ? bookingProducts.find((product) => product.detailSlug === selectedDetailProduct.slug)
+    : null
 
   return (
     <>
@@ -77,12 +105,20 @@ export default function ProductShowcase() {
                 <ProductCard
                   product={product}
                   onBook={handleBookProduct}
+                  onViewDetails={product.detailSlug && detailProductMap.has(product.detailSlug) ? handleViewDetails : undefined}
                 />
               </Reveal>
             ))}
           </div>
         </div>
       </section>
+      <ProductDetailModal
+        product={selectedDetailProduct}
+        open={Boolean(selectedDetailProduct)}
+        quoteLabel={selectedDetailBookingProduct?.quoteCta}
+        onClose={() => setSelectedDetailProduct(null)}
+        onQuote={handleBookFromDetails}
+      />
       <BookingModal product={selectedProduct} open={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
     </>
   )

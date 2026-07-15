@@ -7,6 +7,9 @@ export type BookingProduct = {
   features: string[]
   bookingEnabled: boolean
   image: string
+  imageAlt?: string
+  badge?: string
+  quoteCta?: string
   detailSlug?: string
 }
 
@@ -58,6 +61,66 @@ export const products: BookingProduct[] = [
     bookingEnabled: true,
     image: '/images/water-softener.png',
     detailSlug: 'water-softener',
+  },
+  {
+    id: 'sand-filter',
+    name: 'Sand Filter',
+    category: 'Water Filtration',
+    description:
+      'A reliable filtration system designed to remove suspended solids, sand, silt, rust, turbidity, and other visible impurities from water.',
+    useCase: 'Sediment removal for borewell, municipal, and pre-treatment applications',
+    features: [
+      'Removes suspended solids, sand, silt, and rust',
+      'Reduces turbidity and visible impurities',
+      'Protects RO membranes and downstream equipment',
+      'Easy backwashing and low maintenance',
+    ],
+    bookingEnabled: true,
+    image: '/images/sand-filter.webp',
+    imageAlt: "Marco's Water Solutions industrial sand filter",
+    badge: 'Sediment Removal',
+    quoteCta: 'Request Sand Filter Quote',
+    detailSlug: 'sand-filter',
+  },
+  {
+    id: 'activated-carbon-filter',
+    name: 'Activated Carbon Filter',
+    category: 'Water Filtration',
+    description:
+      'An advanced filtration system that helps remove chlorine, odour, colour, organic contaminants, and unpleasant taste from water.',
+    useCase: 'Odour, chlorine, taste, and colour improvement before final treatment',
+    features: [
+      'Removes chlorine and unpleasant odour',
+      'Improves taste and colour',
+      'Reduces organic contaminants',
+      'Protects RO membranes',
+    ],
+    bookingEnabled: true,
+    image: '/images/activated-carbon-filter.webp',
+    imageAlt: "Marco's Water Solutions activated carbon filter",
+    badge: 'Odour & Chlorine Removal',
+    quoteCta: 'Request Carbon Filter Quote',
+    detailSlug: 'activated-carbon-filter',
+  },
+  {
+    id: 'iron-removal-filter',
+    name: 'Iron Removal Filter',
+    category: 'Water Filtration',
+    description:
+      'A specialised water-treatment system designed to reduce dissolved iron, metallic taste, staining, discolouration, and iron-related odour.',
+    useCase: 'Iron reduction for borewell and groundwater treatment',
+    features: [
+      'Reduces dissolved and suspended iron',
+      'Helps remove metallic taste and odour',
+      'Prevents reddish-brown staining',
+      'Protects pipes, tanks, fixtures, and appliances',
+    ],
+    bookingEnabled: true,
+    image: '/images/iron-removal-filter.webp',
+    imageAlt: "Marco's Water Solutions iron removal filter",
+    badge: 'Iron & Stain Removal',
+    quoteCta: 'Request Iron Filter Quote',
+    detailSlug: 'iron-removal-filter',
   },
   {
     id: 'ro-plant-system',

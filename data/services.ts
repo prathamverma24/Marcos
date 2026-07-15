@@ -13,9 +13,12 @@ export type Product = {
   shortTitle: string
   category: string
   image: string
+  imageAlt?: string
   summary: string
   details: string
   link: string
+  seoTitle?: string
+  seoDescription?: string
   benefits: string[]
   useCases: string[]
   detailSections: DetailSection[]
@@ -297,6 +300,255 @@ export const products: Product[] = [
               'Reduces effectiveness of soaps and detergents',
             ],
           },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'sand-filter',
+    title: 'Sand Filter',
+    shortTitle: 'Sand Filter',
+    category: 'Water Filtration',
+    image: '/images/sand-filter.webp',
+    imageAlt: "Marco's Water Solutions industrial sand filter",
+    summary: 'Sediment, silt, rust, and turbidity removal for cleaner water',
+    details:
+      'A reliable filtration system designed to remove suspended solids, sand, silt, rust, turbidity, and other visible impurities from water.',
+    link: '#products',
+    seoTitle: "Sand Filter for Water Treatment | Marco's Water Solutions",
+    seoDescription:
+      'Sand filtration systems for removing sediment, silt, rust, and turbidity from residential, commercial, and industrial water.',
+    benefits: [
+      'Removes suspended solids, sand, silt, and rust',
+      'Reduces turbidity and visible impurities',
+      'Protects RO membranes and downstream equipment',
+      'Suitable for borewell and municipal water',
+      'Durable FRP or MS vessel options',
+      'Manual or automatic valve operation',
+      'Easy backwashing and low maintenance',
+    ],
+    useCases: [
+      'RO plant pre-treatment',
+      'Residential water filtration',
+      'Commercial buildings',
+      'Industrial process water',
+      'Borewell water treatment',
+      'STP and ETP polishing stages',
+    ],
+    detailSections: [
+      {
+        title: 'Product Overview',
+        body: [
+          'The Sand Filter uses graded filtration media to trap suspended particles and reduce turbidity before water enters downstream treatment systems. It is suitable for residential, commercial, industrial, borewell, and pre-treatment applications.',
+        ],
+      },
+      {
+        title: 'Working Principle',
+        body: [
+          'Water enters the vessel and passes through layers of graded sand and support media. Suspended solids and turbidity are trapped within the media. The filter is cleaned through periodic backwashing.',
+        ],
+      },
+      {
+        title: 'Available Configurations',
+        groups: [
+          {
+            title: 'Vessel Options',
+            items: ['FRP vessel options', 'MS vessel options', 'SS options based on requirement'],
+          },
+          {
+            title: 'Operation Options',
+            items: ['Manual valve operation', 'Semi-automatic operation', 'Automatic valve operation'],
+          },
+        ],
+      },
+      {
+        title: 'Installation Support',
+        body: [
+          'Marcos Water Solutions supports requirement understanding, site-fit guidance, filtration media selection, installation planning, and downstream equipment integration.',
+        ],
+      },
+      {
+        title: 'Maintenance Information',
+        body: [
+          'Routine backwashing helps clear trapped suspended particles from the media bed. Media condition, inlet water quality, and operating pattern should be reviewed during service visits.',
+        ],
+      },
+      {
+        title: 'Technical Specifications',
+        groups: [
+          { title: 'Vessel Material', items: ['FRP / MS / SS options'] },
+          { title: 'Operation', items: ['Manual / Semi-Automatic / Automatic'] },
+          { title: 'Flow Rate', items: ['Customised based on requirement'] },
+          { title: 'Media', items: ['Application-specific graded sand and support media'] },
+          { title: 'Inlet Water', items: ['Borewell / Municipal / Process Water'] },
+          { title: 'Installation', items: ['Residential / Commercial / Industrial'] },
+          { title: 'Backwash', items: ['Manual or automatic'] },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'activated-carbon-filter',
+    title: 'Activated Carbon Filter',
+    shortTitle: 'Carbon Filter',
+    category: 'Water Filtration',
+    image: '/images/activated-carbon-filter.webp',
+    imageAlt: "Marco's Water Solutions activated carbon filter",
+    summary: 'Chlorine, odour, colour, taste, and organic contaminant reduction',
+    details:
+      'An advanced filtration system that helps remove chlorine, odour, colour, organic contaminants, and unpleasant taste from water.',
+    link: '#products',
+    seoTitle: "Activated Carbon Filter | Marco's Water Solutions",
+    seoDescription:
+      'Activated carbon filtration systems for reducing chlorine, odour, colour, taste, and organic contaminants.',
+    benefits: [
+      'Removes chlorine and unpleasant odour',
+      'Improves taste and colour',
+      'Reduces organic contaminants',
+      'Protects RO membranes',
+      'High adsorption capacity',
+      'Suitable for domestic and industrial use',
+      'Manual or automatic backwash options',
+    ],
+    useCases: [
+      'Drinking water treatment',
+      'RO plant pre-treatment',
+      'Hotels and restaurants',
+      'Food and beverage applications',
+      'Commercial buildings',
+      'Industrial process water',
+    ],
+    detailSections: [
+      {
+        title: 'Product Overview',
+        body: [
+          'The Activated Carbon Filter uses high-quality activated carbon media to adsorb chlorine, organic compounds, odour, colour, and taste-causing impurities. It improves water quality and protects RO membranes and other treatment equipment.',
+        ],
+      },
+      {
+        title: 'Working Principle',
+        body: [
+          'Water passes through activated carbon media, where chlorine, organic compounds, odour, colour, and taste-causing impurities are adsorbed onto the carbon surface.',
+        ],
+      },
+      {
+        title: 'Available Configurations',
+        groups: [
+          {
+            title: 'Vessel Options',
+            items: ['FRP vessel options', 'MS vessel options', 'SS options based on requirement'],
+          },
+          {
+            title: 'Operation Options',
+            items: ['Manual backwash options', 'Semi-automatic operation', 'Automatic backwash options'],
+          },
+        ],
+      },
+      {
+        title: 'Installation Support',
+        body: [
+          'Marcos Water Solutions supports placement before RO or final treatment stages, media selection based on water quality, and site-specific installation guidance.',
+        ],
+      },
+      {
+        title: 'Maintenance Information',
+        body: [
+          'Backwashing and periodic media checks help maintain adsorption performance. Replacement timing depends on inlet water quality, chlorine load, organic load, and usage pattern.',
+        ],
+      },
+      {
+        title: 'Technical Specifications',
+        groups: [
+          { title: 'Vessel Material', items: ['FRP / MS / SS options'] },
+          { title: 'Operation', items: ['Manual / Semi-Automatic / Automatic'] },
+          { title: 'Flow Rate', items: ['Customised based on requirement'] },
+          { title: 'Media', items: ['Application-specific activated carbon media'] },
+          { title: 'Inlet Water', items: ['Borewell / Municipal / Process Water'] },
+          { title: 'Installation', items: ['Residential / Commercial / Industrial'] },
+          { title: 'Backwash', items: ['Manual or automatic'] },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'iron-removal-filter',
+    title: 'Iron Removal Filter',
+    shortTitle: 'Iron Filter',
+    category: 'Water Filtration',
+    image: '/images/iron-removal-filter.webp',
+    imageAlt: "Marco's Water Solutions iron removal filter",
+    summary: 'Iron, metallic taste, staining, and discolouration reduction',
+    details:
+      'A specialised water-treatment system designed to reduce dissolved iron, metallic taste, staining, discolouration, and iron-related odour.',
+    link: '#products',
+    seoTitle: "Iron Removal Filter for Borewell Water | Marco's Water Solutions",
+    seoDescription:
+      'Iron removal filtration systems for reducing iron, metallic taste, staining, and discolouration in borewell and groundwater.',
+    benefits: [
+      'Reduces dissolved and suspended iron',
+      'Helps remove metallic taste and odour',
+      'Prevents reddish-brown staining',
+      'Protects pipes, tanks, fixtures, and appliances',
+      'Suitable for borewell and groundwater',
+      'Specialised iron-removal media',
+      'Easy backwashing and maintenance',
+    ],
+    useCases: [
+      'Borewell water treatment',
+      'Residential apartments',
+      'Villas and farmhouses',
+      'Commercial buildings',
+      'Hotels and hospitals',
+      'Industrial water treatment',
+    ],
+    detailSections: [
+      {
+        title: 'Product Overview',
+        body: [
+          'The Iron Removal Filter treats iron-contaminated borewell and groundwater using oxidation and specialised filtration media. It helps prevent reddish-brown stains, metallic taste, pipe blockage, and damage to plumbing and appliances.',
+        ],
+      },
+      {
+        title: 'Working Principle',
+        body: [
+          'Iron in the water is oxidised and trapped using specialised filtration media. The collected iron deposits are removed through periodic backwashing.',
+        ],
+      },
+      {
+        title: 'Available Configurations',
+        groups: [
+          {
+            title: 'Vessel Options',
+            items: ['FRP vessel options', 'MS vessel options', 'SS options based on requirement'],
+          },
+          {
+            title: 'Operation Options',
+            items: ['Manual operation', 'Semi-automatic operation', 'Automatic backwash options'],
+          },
+        ],
+      },
+      {
+        title: 'Installation Support',
+        body: [
+          'Marcos Water Solutions supports raw water review, iron-treatment media selection, installation planning, and integration with storage tanks, pumps, RO systems, or downstream polishing stages.',
+        ],
+      },
+      {
+        title: 'Maintenance Information',
+        body: [
+          'Periodic backwashing removes trapped iron deposits from the media bed. Media checks and service frequency should be based on inlet iron condition, water usage, and site requirements.',
+        ],
+      },
+      {
+        title: 'Technical Specifications',
+        groups: [
+          { title: 'Vessel Material', items: ['FRP / MS / SS options'] },
+          { title: 'Operation', items: ['Manual / Semi-Automatic / Automatic'] },
+          { title: 'Flow Rate', items: ['Customised based on requirement'] },
+          { title: 'Media', items: ['Application-specific iron-removal media'] },
+          { title: 'Inlet Water', items: ['Borewell / Municipal / Process Water'] },
+          { title: 'Installation', items: ['Residential / Commercial / Industrial'] },
+          { title: 'Backwash', items: ['Manual or automatic'] },
         ],
       },
     ],
