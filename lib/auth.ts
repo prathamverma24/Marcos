@@ -6,11 +6,41 @@ import { redirect } from 'next/navigation'
 import { prisma } from './prisma'
 
 export const authSecret = process.env.NEXTAUTH_SECRET || 'local-placeholder-secret-login-disabled'
+const useSecureCookies = process.env.NEXTAUTH_URL?.startsWith('https://') || process.env.NODE_ENV === 'production'
 
 export const authOptions: NextAuthOptions = {
   secret: authSecret,
+  useSecureCookies,
   session: {
     strategy: 'jwt',
+  },
+  cookies: {
+    sessionToken: {
+      name: `${useSecureCookies ? '__Secure-' : ''}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: useSecureCookies,
+      },
+    },
+    csrfToken: {
+      name: `${useSecureCookies ? '__Host-' : ''}next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: useSecureCookies,
+      },
+    },
+    callbackUrl: {
+      name: `${useSecureCookies ? '__Secure-' : ''}next-auth.callback-url`,
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: useSecureCookies,
+      },
+    },
   },
   pages: {
     signIn: '/admin/login',
