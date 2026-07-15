@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       leadId: lead?.id,
       ...result,
       message: result.setupRequired
-        ? 'Booking request validated. Configure RESEND_API_KEY, CONTACT_EMAIL_TO, and CONTACT_EMAIL_FROM to send emails.'
+        ? 'Booking request validated. Configure WEB3FORMS_ACCESS_KEY or Resend email variables to send emails.'
         : 'Booking request sent.',
     })
   } catch (error) {

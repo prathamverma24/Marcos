@@ -5,6 +5,29 @@ type EmailResult = {
   setupRequired: boolean
 }
 
+async function submitWeb3Forms(formData: FormData, failureMessage: string): Promise<EmailResult> {
+  const web3FormsKey = process.env.WEB3FORMS_ACCESS_KEY
+
+  if (!web3FormsKey) {
+    return { provider: 'not-configured', setupRequired: true }
+  }
+
+  formData.append('access_key', web3FormsKey)
+  formData.append('from_name', 'Marcos Water Solutions Website')
+
+  const response = await fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    body: formData,
+  })
+  const payload = (await response.json().catch(() => null)) as { success?: boolean; message?: string } | null
+
+  if (!response.ok || !payload?.success) {
+    throw new Error(payload?.message || failureMessage)
+  }
+
+  return { provider: 'web3forms', setupRequired: false }
+}
+
 function buildMessage(data: ContactFormData) {
   return [
     `Name: ${data.name}`,
@@ -18,29 +41,17 @@ function buildMessage(data: ContactFormData) {
 }
 
 export async function sendContactEmail(data: ContactFormData): Promise<EmailResult> {
-  const web3FormsKey = process.env.WEB3FORMS_ACCESS_KEY
+  const formData = new FormData()
+  formData.append('name', data.name)
+  formData.append('email', data.email)
+  formData.append('phone', data.phone)
+  formData.append('subject', `Marcos Water Solutions inquiry: ${data.interest}`)
+  formData.append('message', buildMessage(data))
 
-  if (web3FormsKey) {
-    const formData = new FormData()
-    formData.append('access_key', web3FormsKey)
-    formData.append('name', data.name)
-    formData.append('email', data.email)
-    formData.append('phone', data.phone)
-    formData.append('subject', `Marcos Water Solutions inquiry: ${data.interest}`)
-    formData.append('message', buildMessage(data))
-    formData.append('from_name', 'Marcos Water Solutions Website')
+  const web3FormsResult = await submitWeb3Forms(formData, 'Web3Forms could not send the message')
 
-    const response = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      body: formData,
-    })
-    const payload = (await response.json().catch(() => null)) as { success?: boolean; message?: string } | null
-
-    if (!response.ok || !payload?.success) {
-      throw new Error(payload?.message || 'Web3Forms could not send the message')
-    }
-
-    return { provider: 'web3forms', setupRequired: false }
+  if (!web3FormsResult.setupRequired) {
+    return web3FormsResult
   }
 
   const resendKey = process.env.RESEND_API_KEY
@@ -90,6 +101,19 @@ function buildBookingMessage(data: BookingFormData) {
 }
 
 export async function sendBookingEmail(data: BookingFormData): Promise<EmailResult> {
+  const formData = new FormData()
+  formData.append('name', data.name)
+  formData.append('email', data.email)
+  formData.append('phone', data.phone)
+  formData.append('subject', `Booking request: ${data.productName}`)
+  formData.append('message', buildBookingMessage(data))
+
+  const web3FormsResult = await submitWeb3Forms(formData, 'Web3Forms could not send the booking request')
+
+  if (!web3FormsResult.setupRequired) {
+    return web3FormsResult
+  }
+
   const resendKey = process.env.RESEND_API_KEY
   const to = process.env.CONTACT_EMAIL_TO
   const from = process.env.CONTACT_EMAIL_FROM
