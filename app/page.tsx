@@ -16,10 +16,12 @@ import VisualExperience from '../components/sections/VisualExperience'
 import WhyChooseSection from '../components/sections/WhyChooseSection'
 import { products } from '../data/services'
 import { siteData } from '../data/site'
+import { headers } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
 export default function HomePage() {
+  const nonce = headers().get('x-nonce') || undefined
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
@@ -53,6 +55,7 @@ export default function HomePage() {
       <main className="bg-[#f5fbff] text-slate-950">
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         <HeroSection />

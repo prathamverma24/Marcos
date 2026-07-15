@@ -3,6 +3,8 @@ import type { ReactNode } from 'react'
 import { siteData } from '../data/site'
 import './globals.css'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteData.canonicalUrl),
   title: {
